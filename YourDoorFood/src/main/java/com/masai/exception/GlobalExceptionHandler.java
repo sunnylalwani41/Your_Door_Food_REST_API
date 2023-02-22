@@ -43,4 +43,17 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
 	}
 	
+
+	@ExceptionHandler(RestaurantException.class)
+	public ResponseEntity<MyErrorDetail> myRouteException(RestaurantException re, WebRequest webReq){
+		
+		MyErrorDetail red = new MyErrorDetail();
+		red.setTimeStamp(LocalDateTime.now());
+		red.setMessage(re.getMessage());
+		red.setDetails(webReq.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetail>(red, HttpStatus.BAD_REQUEST);
+		
+	}
+	
 }
