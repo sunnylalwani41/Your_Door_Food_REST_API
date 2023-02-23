@@ -53,4 +53,35 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(OrderDetailsException.class)
+	public ResponseEntity<MyErrorDetail> orderDetailsExceptionHandlar(OrderDetailsException ode,WebRequest req){
+		MyErrorDetail myError= new MyErrorDetail();
+		myError.setTimeStamp(LocalDateTime.now());
+		myError.setMessage(ode.getMessage());
+		myError.setDetails(req.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	@ExceptionHandler(BillException.class)
+	public ResponseEntity<MyErrorDetail> billExceptionHandler(BillException be, WebRequest req){
+		MyErrorDetail myError= new MyErrorDetail();
+		myError.setTimeStamp(LocalDateTime.now());
+		myError.setMessage(be.getMessage());
+		myError.setDetails(req.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	@ExceptionHandler(FoodCartException.class)
+	public ResponseEntity<MyErrorDetail> foodCartExceptionHandler(FoodCartException fce, WebRequest req){
+		MyErrorDetail myError= new MyErrorDetail();
+		myError.setTimeStamp(LocalDateTime.now());
+		myError.setMessage(fce.getMessage());
+		myError.setDetails(req.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
+	}
 }
