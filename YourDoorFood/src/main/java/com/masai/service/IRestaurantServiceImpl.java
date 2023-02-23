@@ -1,5 +1,5 @@
 package com.masai.service;
 
-public class IRestaurantServiceImpl {
+public class IRestaurantServiceImpl implements IRestaurantService{
 
 }
