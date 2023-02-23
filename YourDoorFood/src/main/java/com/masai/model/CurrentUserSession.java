@@ -1,5 +1,6 @@
 package com.masai.model;
 
+
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -20,4 +21,5 @@ public class CurrentUserSession {
 	private String uuid;
 	
 	private LocalDateTime timeStamp;
+
 }
