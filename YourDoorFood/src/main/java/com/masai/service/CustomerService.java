@@ -1,19 +1,20 @@
 package com.masai.service;
 
-import java.util.List;
-
+import com.masai.exception.CustomerAddresssException;
+import com.masai.model.Address;
 import com.masai.model.Customer;
-import com.masai.model.Restaurant;
 
 public interface CustomerService {
 	
     public Customer addCustomer(Customer customer);
 	
-	public Customer updateCustomer(Customer customer);
+	public Customer updateCustomer(Customer customer)throws CustomerAddresssException;
 	
-	public Customer removeCustomer(Customer customer);
+	public Customer removeCustomer(Customer customer)throws CustomerAddresssException;
 	
-	public Customer viewCustomer(Customer customer);
+	public Customer viewCustomer(Customer customer)throws CustomerAddresssException;
 	
-	public List<Customer> viewAllCustomers(Restaurant restaurant);
+	public String updateAddress(String mobileNo,Address address) throws CustomerAddresssException;
+	
+	public String updatepasword(String mobileNo,String password) throws CustomerAddresssException;
 }

@@ -3,6 +3,7 @@ package com.masai.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -49,12 +50,12 @@ public class Customer {
 	
 	@JsonIgnore
 	@NotNull
-	@Pattern(regexp = "")
+	@Pattern(regexp = "^[A-Z][a-z][0-9]*")
 	@Size(min = 4,max = 8)
 	@NotBlank(message = "Password should not be black")
 	private String password;
 	
-	@NotNull
+	@Embedded
 	private Address address;
 
 }

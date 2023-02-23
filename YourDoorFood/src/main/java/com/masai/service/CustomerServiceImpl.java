@@ -1,14 +1,13 @@
 package com.masai.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masai.exception.CustomerAddresssException;
+import com.masai.model.Address;
 import com.masai.model.Customer;
-import com.masai.model.Restaurant;
 import com.masai.repository.CustomerRepo;
 
 @Service
@@ -18,7 +17,7 @@ public class CustomerServiceImpl implements CustomerService{
 	private CustomerRepo customerRepo;
 
 	@Override
-	public Customer addCustomer(Customer customer) {	
+	public Customer addCustomer(Customer customer) {
 		return customerRepo.save(customer);
 	}
 
@@ -26,8 +25,9 @@ public class CustomerServiceImpl implements CustomerService{
 	public Customer updateCustomer(Customer customer) {
 		Optional<Customer> customerOptional = customerRepo.findById(customer.getCustomerID());
 		if(customerOptional.isEmpty()){ 
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerAddresssException("This customer does not exist");
 		}
+		customerRepo.save(customer);
 		return customerOptional.get();
 
 	}
@@ -36,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService{
 	public Customer removeCustomer(Customer customer) {
 		Optional<Customer> customerOptional = customerRepo.findById(customer.getCustomerID());
 		if(customerOptional.isEmpty()) {
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerAddresssException("This customer does not exist");
 		}
 		customerRepo.delete(customerOptional.get());
 		return customerOptional.get();
@@ -46,15 +46,34 @@ public class CustomerServiceImpl implements CustomerService{
 	public Customer viewCustomer(Customer customer) {
 		Optional<Customer> customer2 = customerRepo.findById(customer.getCustomerID());
 		if(customer2.isEmpty()) {
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerAddresssException("This customer does not exist");
 		}
 		return customer2.get();
 	
 	}
 
 	@Override
-	public List<Customer> viewAllCustomers(Restaurant restaurant) {		
-		return null;
+	public String updateAddress(String mobileNo,Address address) throws CustomerAddresssException {
+		
+		Customer customer = customerRepo.findbyMobileNumber(mobileNo);
+		if(customer==null) {
+			throw new CustomerAddresssException("Customer does not exist");
+		}
+		customer.setAddress(address);
+		customerRepo.save(customer);
+		return "Address update sucssesfully";
 	}
+
+	@Override
+	public String updatepasword(String mobileNo, String password) throws CustomerAddresssException {
+		Customer customer = customerRepo.findbyMobileNumber(mobileNo);
+		if(customer==null) {
+			throw new CustomerAddresssException("Customer does not exist");
+		}
+		customer.setPassword(password);
+		customerRepo.save(customer);
+		return "Password update sucssesfully";
+	}
+
 
 }
