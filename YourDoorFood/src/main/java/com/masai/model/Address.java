@@ -19,13 +19,13 @@ public class Address {
 	private int addressid;
 	
 	@NotNull
-	@Size(max = 20)
+	@Size(max = 20,message = "Building Name should be small")
 	private String buildingName;
 	
-	@Size(max = 10)
+	@Size(max = 10,message = "Steet Number should be small")
 	private String steetNo;
 	
-	@Size(max = 15, message = "city name is to long")
+	@Size(max = 15, message = "area name is to long")
 	private String area;
 	
 	@NotNull
