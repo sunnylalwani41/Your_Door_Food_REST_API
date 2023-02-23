@@ -1,6 +1,9 @@
 package com.masai.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -22,5 +25,6 @@ public class Category {
 		private Integer catId;
 		private String categoryName;
 		@OneToMany(cascade = CascadeType.ALL,mappedBy = "category" ,fetch = FetchType.EAGER)
-		private List<Item> item;
+		@JsonIgnore
+		private List<Item> items=new ArrayList<>();
 }
