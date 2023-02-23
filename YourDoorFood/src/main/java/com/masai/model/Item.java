@@ -8,22 +8,26 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-@Entity
+
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class Item {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "itemGenrator")
+    @SequenceGenerator(name = "itemGenrator",sequenceName = "itemgen",allocationSize = 1,initialValue = 11)
 	private Integer itemId;
 	private String itemName;
-	@OneToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Category category;
 	private Integer quantity;
 	private double cost;
