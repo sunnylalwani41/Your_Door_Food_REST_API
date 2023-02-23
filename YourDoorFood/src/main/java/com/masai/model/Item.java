@@ -1,6 +1,9 @@
 package com.masai.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -33,5 +36,6 @@ public class Item {
 		private Integer quantity;
 		private double cost;
 		@ManyToMany(cascade =CascadeType.ALL,mappedBy = "items")
-		private List<Restaurant> restaurant; 
+		@JsonIgnore
+		private List<Restaurant> restaurants =new ArrayList<>(); 
 }
