@@ -3,6 +3,7 @@ package com.masai.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -50,6 +51,7 @@ public class Customer {
 	private String password;
 	
 	@NotNull
+	@Embedded
 	private Address address;
 
 }

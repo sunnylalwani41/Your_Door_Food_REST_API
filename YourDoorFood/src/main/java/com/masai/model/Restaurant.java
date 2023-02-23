@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +23,7 @@ public class Restaurant {
 	    @SequenceGenerator(name = "restaurantGenrator",sequenceName = "resgen",allocationSize = 1,initialValue = 1)
 		private Integer restaurantId;
 		private String restaurantName;
+		@Embedded
 		private Address address;
 		@JsonIgnore
 		private String password;

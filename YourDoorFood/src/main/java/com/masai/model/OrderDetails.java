@@ -3,6 +3,8 @@ package com.masai.model;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,6 +21,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +46,7 @@ public class OrderDetails {
 	@Enumerated(EnumType.STRING)
 	private Status orderStatus;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Map<Item, Integer> itemList;
+//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ElementCollection
+	private Map<Item, Integer> items = new HashMap<Item, Integer>();
 }

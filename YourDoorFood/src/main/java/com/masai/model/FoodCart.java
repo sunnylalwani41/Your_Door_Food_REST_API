@@ -1,11 +1,14 @@
 package com.masai.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,8 +37,9 @@ public class FoodCart {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Customer customer;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Map<Item, Integer> itemList;
+//	@OneToMany
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<Item, Integer> items = new HashMap<Item, Integer>();
 	
 	
 }
