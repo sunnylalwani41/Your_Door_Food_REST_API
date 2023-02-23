@@ -30,8 +30,7 @@ public class Restaurant {
 		private Integer restaurantId;
 		private String restaurantName;
 
-		@OneToOne(cascade = CascadeType.ALL)
-
+		@Embedded	
 		private Address address;
 		@Email
 		private String email;
