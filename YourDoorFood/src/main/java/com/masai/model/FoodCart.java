@@ -1,5 +1,11 @@
 package com.masai.model;
 
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,8 +17,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -23,11 +27,12 @@ public class FoodCart {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private int cartId;
 	
-	@OneToOne
+	@JsonIgnore
+	@OneToOne(cascade = CascadeType.ALL)
 	private Customer customer;
 	
-	@OneToMany
-	private List<Item> itemList;
+	@OneToMany(cascade = CascadeType.ALL)
+	private Map<Item, Integer> itemList;
 	
 	
 }
