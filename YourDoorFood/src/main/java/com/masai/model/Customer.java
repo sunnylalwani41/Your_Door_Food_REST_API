@@ -6,9 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +33,7 @@ public class Customer {
 	@NotNull
 	private String lastName;
 	
-	@Size(max = 100,message = "Age Should be less then 100") 
+	@Max(value = 100,message = "Age Should be less then 100")
 	private int age;
 	
 	private String gender;
@@ -42,8 +44,11 @@ public class Customer {
 	@Email(message = "Please enter write email")
 	private String email;
 	
+	@JsonIgnore
 	@NotNull
-    @JsonIgnore
+	@Pattern(regexp = "")
+	@Size(min = 4,max = 8)
+	@NotBlank(message = "Password should not be black")
 	private String password;
 	
 	@NotNull
