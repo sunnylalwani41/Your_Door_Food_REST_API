@@ -13,9 +13,17 @@ import com.masai.model.Restaurant;
 @Repository
 public interface ItemRepo extends JpaRepository<Item, Integer>{
 
+<<<<<<< HEAD
 	public List<Item> findByItemName(String itemName);
 	
 	public List<Item> findByCategory(Category category);
 	
 	
+=======
+	public List<Item> findByItemname(String itemname);
+	public Item findbyCategory(Category category);
+
+	public Item findbyName(String itemName);
+
+>>>>>>> branch 'main' of https://github.com/sunnylalwani41/tasty-hour-5423.git
 }

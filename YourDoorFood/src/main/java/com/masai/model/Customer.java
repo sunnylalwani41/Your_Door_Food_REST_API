@@ -49,7 +49,7 @@ public class Customer {
 	
 	private String gender;
 	
-	@Size(min = 10,max = 10,message = "Mobile Number Should Be 10 digit's")
+	@Size(min = 10,max = 10,message = "Mobile Number Should Be 10 digits")
 	private String mobileNumber;
 	
 	@Email(message = "Please enter write email")

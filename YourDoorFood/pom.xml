@@ -58,11 +58,21 @@
 		    <version>2.0.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
+<<<<<<< HEAD
 		<dependency>
 		    <groupId>net.bytebuddy</groupId>
 		    <artifactId>byte-buddy</artifactId>
 		    <version>1.14.0</version>
 		</dependency>
+=======
+<dependency>
+    <groupId>net.bytebuddy</groupId>
+    <artifactId>byte-buddy</artifactId>
+    <version>1.12.23</version>
+</dependency>
+
+
+>>>>>>> branch 'main' of https://github.com/sunnylalwani41/tasty-hour-5423.git
 	</dependencies>
 
 	<build>

@@ -17,7 +17,6 @@ public class Delivery {
 	private Integer deliveryId;
 	
 	@OneToMany
-	private List<FoodCart> foodCarts = new ArrayList<>();
-	
+	private List<Item> items = new ArrayList<>();
 	
 }

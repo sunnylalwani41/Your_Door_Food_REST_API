@@ -6,12 +6,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
 import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
 import com.masai.model.LoginDTO;
-import com.masai.model.Restaurant;
-import com.masai.repository.RestaurantRepo;
+import com.masai.repository.CustomerRepo;
 import com.masai.repository.SessionRepo;
 
 import net.bytebuddy.utility.RandomString;
@@ -24,13 +24,13 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 	private SessionRepo sessionRepo;
 	
 	@Autowired
-	private RestaurantRepo restaurantRepo;
+	private CustomerRepo customerRepo;
 	
 	@Override
-	public CurrentUserSession login(LoginDTO dto) throws LoginException {
-		Customer customer = restaurantRepo.findByMobileNo();
+	public CurrentUserSession login(LoginDTO dto) throws LoginException, CustomerException {
+		Customer customer = customerRepo.findByMobileNumber(dto.getMobileNumber());
 		
-		if(customer==null) throw new LoginException("Please enter a valid mobile number!");
+		if(customer==null) throw new CustomerException("Please enter a valid mobile number!");
 		
 		Optional<CurrentUserSession> currentUserSession = sessionRepo.findById(customer.getCustomerID());
 		

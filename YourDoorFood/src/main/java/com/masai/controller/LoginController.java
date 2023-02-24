@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.masai.exception.CustomerException;
+import com.masai.exception.LoginException;
+import com.masai.exception.RestaurantException;
 import com.masai.model.CurrentUserSession;
 import com.masai.model.LoginDTO;
 import com.masai.service.CustomerLoginService;
@@ -26,7 +29,7 @@ public class LoginController {
 	private RestaurantLoginService restaurantLoginService;
 	
 	@PostMapping("/customer/login")
-	public ResponseEntity<CurrentUserSession> customerLoginHandler(@RequestBody LoginDTO dto){
+	public ResponseEntity<CurrentUserSession> customerLoginHandler(@RequestBody LoginDTO dto) throws LoginException, CustomerException{
 		
 		CurrentUserSession currentUserSession = customerLoginService.login(dto);
 		
@@ -34,7 +37,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/restaurant/login")
-	public ResponseEntity<CurrentUserSession> restaurantLoginHandler(@RequestBody LoginDTO dto){
+	public ResponseEntity<CurrentUserSession> restaurantLoginHandler(@RequestBody LoginDTO dto) throws LoginException, RestaurantException{
 		
 		CurrentUserSession currentUserSession = restaurantLoginService.login(dto);
 		
@@ -42,7 +45,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/logout/{key}")
-	public ResponseEntity<String> customerLogoutHandler(@PathVariable("key") String key){
+	public ResponseEntity<String> customerLogoutHandler(@PathVariable("key") String key) throws LoginException{
 		
 		String result = customerLoginService.logout(key);
 		

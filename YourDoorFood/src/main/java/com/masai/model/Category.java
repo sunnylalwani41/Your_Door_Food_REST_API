@@ -24,7 +24,7 @@ public class Category {
 	    @SequenceGenerator(name = "categoryGenrator",sequenceName = "catgen",allocationSize = 1,initialValue = 101)
 		private Integer catId;
 		private String categoryName;
+		
 		@OneToMany(cascade = CascadeType.ALL,mappedBy = "category" ,fetch = FetchType.EAGER)
-		@JsonIgnore
 		private List<Item> items=new ArrayList<>();
 }
