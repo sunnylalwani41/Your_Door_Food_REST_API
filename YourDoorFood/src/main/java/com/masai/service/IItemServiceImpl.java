@@ -96,7 +96,7 @@ public class IItemServiceImpl implements IItemService{
 
 	@Override
 	public Item viewAllItemsByCategory(Category cat) throws ItemException {
-        Item items =itemRepo.findbyCtegory(cat);
+        Item items =itemRepo.findbyCategory(cat);
 		
 		if(items==null) throw new ItemException("No item found with this category");
 		

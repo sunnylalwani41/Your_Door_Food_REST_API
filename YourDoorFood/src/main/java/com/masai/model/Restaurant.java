@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,8 +31,8 @@ public class Restaurant {
 		private Integer restaurantId;
 		private String restaurantName;
 
-		@OneToOne(cascade = CascadeType.ALL)
-
+		
+		@Embedded
 		private Address address;
 		@Email
 		private String email;
@@ -41,8 +42,9 @@ public class Restaurant {
 		@NotEmpty
 		@Size(min = 8, max = 15, message = "Password length should be 8 to 15")
 		private String password;
-		@ManyToMany(cascade=CascadeType.ALL)
+		
+		@ManyToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
 		private List<Item> items =new ArrayList<>();
 		private String managerName;
-		private String contactNumber;
+		private String mobileNumber;
 }
