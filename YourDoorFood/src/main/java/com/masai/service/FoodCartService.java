@@ -11,11 +11,11 @@ import com.masai.exception.RestaurantException;
 public interface FoodCartService {
 	public FoodCart addItemToCart(String mobileNo, String itemName, Integer restaurantId) throws FoodCartException, LoginException, ItemException, RestaurantException, CustomerException;
 	
-	public FoodCart increaseQuantity(String mobileNo, String itemName) throws FoodCartException, LoginException, ItemException, CustomerException;
+	public FoodCart increaseQuantity(String mobileNo, String itemName, 	int quantity) throws FoodCartException, LoginException, ItemException, CustomerException;
 	
-	public FoodCart reduceQuantity(FoodCart cart, Item item, int quantity) throws FoodCartException;
+	public FoodCart reduceQuantity(String mobileNo, String itemName, int quantity) throws FoodCartException, LoginException, ItemException, CustomerException;
 	
-	public FoodCart removeItem(FoodCart cart, Item item) throws FoodCartException;
+	public FoodCart removeItem(String mobileNo, String itemName) throws FoodCartException, CustomerException, LoginException;
 	
-	public FoodCart clearCart(FoodCart cart) throws FoodCartException;
+	public FoodCart clearCart(String mobileNo, String itemName) throws FoodCartException, CustomerException, LoginException;
 }
