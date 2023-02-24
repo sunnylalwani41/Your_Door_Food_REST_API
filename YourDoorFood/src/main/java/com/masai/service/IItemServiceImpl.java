@@ -37,9 +37,9 @@ public class IItemServiceImpl implements IItemService{
 		if (existResturant == null) {
 			throw new ItemException(restName + " Resturant Not found with this name");
 		}
-
+		
 		existResturant.getItems().add(item);
-
+		item.getRestaurants().add(existResturant);
 		return itemRepo.save(item);
 	}
 

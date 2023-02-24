@@ -44,9 +44,11 @@ public class OrderDetails {
 	private Customer customer;
 	
 	@Enumerated(EnumType.STRING)
-	private Status orderStatus;
+	private Status paymentStatus;
+	
+	private Double totalAmount;
 	
 //	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<Item, Integer> items = new HashMap<Item, Integer>();
+	private Map<ItemRestaurantDTO, Integer> itemsDTO = new HashMap<>();
 }

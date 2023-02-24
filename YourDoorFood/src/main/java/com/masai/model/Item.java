@@ -1,7 +1,9 @@
 package com.masai.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -38,5 +40,5 @@ public class Item {
 		
 		@JsonIgnore
 		@ManyToMany(cascade =CascadeType.ALL,mappedBy = "items")
-		private List<Restaurant> restaurants =new ArrayList<>(); 
+		private Set<Restaurant> restaurants =new HashSet<>();
 }

@@ -39,7 +39,6 @@ public class FoodCart {
 	
 //	@OneToMany
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<Item, Integer> items = new HashMap<Item, Integer>();
-	
-	
+	private Map<ItemRestaurantDTO, Integer> itemsDTO = new HashMap<>();
+
 }
