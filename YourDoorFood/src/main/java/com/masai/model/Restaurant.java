@@ -26,12 +26,14 @@ import lombok.Data;
 public class Restaurant {
 
 	  @Id
-	    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "restaurantGenrator")
-	    @SequenceGenerator(name = "restaurantGenrator",sequenceName = "resgen",allocationSize = 1,initialValue = 1)
+	    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "userGenerator")
+	    @SequenceGenerator(name = "userGenerator",sequenceName = "usergen",allocationSize = 1,initialValue = 1)
 		private Integer restaurantId;
 		private String restaurantName;
 
+
 		
+
 		@Embedded
 		private Address address;
 		@Email

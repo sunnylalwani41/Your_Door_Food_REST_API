@@ -34,7 +34,7 @@ public class FoodCart {
 	private int cartId;
 	
 	@JsonIgnore
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "foodCart")
 	private Customer customer;
 	
 //	@OneToMany

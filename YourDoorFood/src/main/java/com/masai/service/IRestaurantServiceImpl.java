@@ -71,7 +71,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 	@Override
 	public List<Restaurant> viewRestaurantByItemName(String itemname) throws RestaurantException {
 
-		List<Item> itemsList=iRepo.findByItemname(itemname);
+		List<Item> itemsList=iRepo.findByItemName(itemname);
 		
 		
 		List<Restaurant> allResturant = new ArrayList<>();

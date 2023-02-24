@@ -38,6 +38,5 @@ public class Item {
 		
 		@JsonIgnore
 		@ManyToMany(cascade =CascadeType.ALL,mappedBy = "items")
-		
 		private List<Restaurant> restaurants =new ArrayList<>(); 
 }
