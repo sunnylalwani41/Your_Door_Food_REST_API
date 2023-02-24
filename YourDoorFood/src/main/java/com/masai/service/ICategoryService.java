@@ -11,5 +11,5 @@ public interface ICategoryService {
 	public Category updateCategory(Integer catId)throws CategoryException;
 	public Category removeCategory(Integer catId)throws CategoryException;
 	public Category viewCategory(String categoryName)throws CategoryException;
-	public List<Category> viewAllCategory(Category cat)throws CategoryException;
+	public List<Category> viewAllCategory()throws CategoryException;
 }
