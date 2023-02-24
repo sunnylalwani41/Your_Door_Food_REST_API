@@ -43,8 +43,8 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(CustomerAddresssException.class)
-	public ResponseEntity<MyErrorDetail> CustomerExceptionHandlar(CustomerAddresssException customerAddresssException,WebRequest webRequest){
+	@ExceptionHandler(CustomerException.class)
+	public ResponseEntity<MyErrorDetail> CustomerExceptionHandlar(CustomerException customerAddresssException,WebRequest webRequest){
 		MyErrorDetail myError= new MyErrorDetail();
 		myError.setTimeStamp(LocalDateTime.now());
 		myError.setMessage(customerAddresssException.getMessage());

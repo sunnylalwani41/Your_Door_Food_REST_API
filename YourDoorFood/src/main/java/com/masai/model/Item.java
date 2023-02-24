@@ -35,7 +35,8 @@ public class Item {
 		private Category category;
 		private Integer quantity;
 		private double cost;
-		@ManyToMany(cascade =CascadeType.ALL,mappedBy = "items")
+		
 		@JsonIgnore
+		@ManyToMany(cascade =CascadeType.ALL,mappedBy = "items")
 		private List<Restaurant> restaurants =new ArrayList<>(); 
 }

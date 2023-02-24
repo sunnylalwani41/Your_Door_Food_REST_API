@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.masai.exception.CustomerAddresssException;
+import com.masai.exception.CustomerException;
 import com.masai.model.Customer;
 import com.masai.model.Restaurant;
 import com.masai.repository.CustomerRepo;
@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService{
 	public Customer updateCustomer(Customer customer) {
 		Optional<Customer> customerOptional = customerRepo.findById(customer.getCustomerID());
 		if(customerOptional.isEmpty()){ 
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerException("This customer dose not exist");
 		}
 		return customerOptional.get();
 
@@ -36,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService{
 	public Customer removeCustomer(Customer customer) {
 		Optional<Customer> customerOptional = customerRepo.findById(customer.getCustomerID());
 		if(customerOptional.isEmpty()) {
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerException("This customer dose not exist");
 		}
 		customerRepo.delete(customerOptional.get());
 		return customerOptional.get();
@@ -46,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService{
 	public Customer viewCustomer(Customer customer) {
 		Optional<Customer> customer2 = customerRepo.findById(customer.getCustomerID());
 		if(customer2.isEmpty()) {
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerException("This customer dose not exist");
 		}
 		return customer2.get();
 	

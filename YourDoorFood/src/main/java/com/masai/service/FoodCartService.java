@@ -3,9 +3,12 @@ package com.masai.service;
 import com.masai.model.FoodCart;
 import com.masai.model.Item;
 import com.masai.exception.FoodCartException;
+import com.masai.exception.ItemException;
+import com.masai.exception.LoginException;
+import com.masai.exception.RestaurantException;
 
 public interface FoodCartService {
-	public FoodCart addItemToCart(FoodCart cart, Item item) throws FoodCartException;
+	public FoodCart addItemToCart(String mobileNo, String itemName, Integer restaurantId) throws FoodCartException, LoginException, ItemException, RestaurantException;
 	
 	public FoodCart increaseQuantity(FoodCart cart, Item item, int quantity) throws FoodCartException;
 	

@@ -3,11 +3,15 @@ package com.masai.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -27,8 +31,8 @@ import lombok.NoArgsConstructor;
 public class Customer {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@NotNull
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "userGenerator")
+    @SequenceGenerator(name = "userGenerator",sequenceName = "usergen",allocationSize = 1,initialValue = 1)
 	private int customerID;
 	
 	@NotNull
@@ -39,6 +43,9 @@ public class Customer {
 	
 	@Max(value = 100,message = "Age Should be less then 100")
 	private int age;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private FoodCart foodCart;
 	
 	private String gender;
 	

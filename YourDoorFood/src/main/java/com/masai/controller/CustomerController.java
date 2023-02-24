@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.masai.exception.CustomerAddresssException;
+import com.masai.exception.CustomerException;
 import com.masai.model.Customer;
 import com.masai.service.CustomerService;
 
@@ -23,25 +23,25 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	@PostMapping("/addcustomer")
-	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer)throws CustomerAddresssException{
+	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer)throws CustomerException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.addCustomer(customer), HttpStatus.CREATED);
 		return customerResponseEntity;
 	}
 	
 	@PutMapping("/updatecustomer")
-	public ResponseEntity<Customer> updateCustomerDetails(@RequestBody Customer customer)throws CustomerAddresssException{
+	public ResponseEntity<Customer> updateCustomerDetails(@RequestBody Customer customer)throws CustomerException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.updateCustomer(customer), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
 	@DeleteMapping("/updatecustomer")
-	public ResponseEntity<Customer> deleteCustomerByid(@RequestBody Customer customer)throws CustomerAddresssException{
+	public ResponseEntity<Customer> deleteCustomerByid(@RequestBody Customer customer)throws CustomerException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.removeCustomer(customer), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
 	@DeleteMapping("/findcustomer")
-	public ResponseEntity<Customer> findCustomer(@RequestBody Customer customer)throws CustomerAddresssException{
+	public ResponseEntity<Customer> findCustomer(@RequestBody Customer customer)throws CustomerException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.viewCustomer(customer), HttpStatus.FOUND);
 		return customerResponseEntity;
 	}

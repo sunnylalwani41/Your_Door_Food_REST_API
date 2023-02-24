@@ -47,6 +47,6 @@ public class OrderDetails {
 	private Status orderStatus;
 	
 //	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<Item, Integer> items = new HashMap<Item, Integer>();
 }

@@ -8,6 +8,6 @@ import com.masai.model.Customer;
 @Repository
 public interface CustomerRepo extends JpaRepository<Customer, Integer>{
 
-	
+	public Customer findByMobileNumber(String mobileNo);
 
 }
