@@ -9,7 +9,7 @@ import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
 
 public interface FoodCartService {
-	public FoodCart addItemToCart(String mobileNo, String itemName, Integer restaurantId) throws FoodCartException, LoginException, ItemException, RestaurantException;
+	public FoodCart addItemToCart(String mobileNo, String itemName, Integer restaurantId) throws FoodCartException, LoginException, ItemException, RestaurantException, CustomerException;
 	
 	public FoodCart increaseQuantity(String mobileNo, String itemName) throws FoodCartException, LoginException, ItemException, CustomerException;
 	

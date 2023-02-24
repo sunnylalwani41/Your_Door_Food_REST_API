@@ -31,10 +31,9 @@ public class Restaurant {
 		private Integer restaurantId;
 		private String restaurantName;
 
-<<<<<<< HEAD
-=======
+
 		
->>>>>>> branch 'main' of https://github.com/sunnylalwani41/tasty-hour-5423.git
+
 		@Embedded
 		private Address address;
 		@Email

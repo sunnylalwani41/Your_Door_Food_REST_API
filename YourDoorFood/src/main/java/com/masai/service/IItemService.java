@@ -15,7 +15,7 @@ public interface IItemService {
 	public Item updateItem(String restName,Item item) throws ItemException;
 	public Item viewItem(Integer itemId)throws ItemException;
 	public Item removeItem(Integer itemId)throws ItemException;
-	public Item viewAllItemsByCategory(Category cat)throws ItemException;
+	public List<Item> viewAllItemsByCategory(Category cat)throws ItemException;
 	public List<Item> viewAllItemsByRestaurant(Restaurant res)throws ItemException,RestaurantException;
 	public List<Item> viewAllItemsByName(String name)throws ItemException;
 }

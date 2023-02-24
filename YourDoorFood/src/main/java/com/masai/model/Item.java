@@ -38,9 +38,5 @@ public class Item {
 		
 		@JsonIgnore
 		@ManyToMany(cascade =CascadeType.ALL,mappedBy = "items")
-<<<<<<< HEAD
-=======
-		
->>>>>>> branch 'main' of https://github.com/sunnylalwani41/tasty-hour-5423.git
 		private List<Restaurant> restaurants =new ArrayList<>(); 
 }

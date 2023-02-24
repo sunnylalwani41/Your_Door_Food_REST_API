@@ -102,7 +102,7 @@ public class FoodCartSerivceImpl implements FoodCartService{
 			}
 		}
 		if(item==null)
-			throw new ItemException("Item is not available in the cart, please add the item first");
+			throw new FoodCartException("Item is not available in the cart, please add the item first");
 		if(item.getQuantity()>0) {
 			if(itemMap.containsKey(item)) {
 				itemMap.put(item, itemMap.get(item)+1);
@@ -115,7 +115,7 @@ public class FoodCartSerivceImpl implements FoodCartService{
 		else {
 			throw new ItemException("Insufficient item quantity");
 		}
-		return null;
+		return cartRepo.save(foodCart);
 	}
 
 	@Override

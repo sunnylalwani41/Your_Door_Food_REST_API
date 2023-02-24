@@ -69,9 +69,9 @@ public class ItemController {
 	
 	
 	@GetMapping("/view")
-	public ResponseEntity<Item> viewAllItemsByCategoryHandler(Category cat) throws ItemException
+	public ResponseEntity<List<Item>> viewAllItemsByCategoryHandler(Category cat) throws ItemException
 	{
-		Item items= iItemService.viewAllItemsByCategory(cat);
+		List<Item> items= iItemService.viewAllItemsByCategory(cat);
 
 		return new ResponseEntity<>(items, HttpStatus.FOUND);
 	}
