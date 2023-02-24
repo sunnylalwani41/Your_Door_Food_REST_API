@@ -1,9 +1,11 @@
 package com.masai.service;
 
 import com.masai.exception.DeliveryException;
+import com.masai.exception.LoginException;
+import com.masai.exception.OrderDetailsException;
 
 public interface DeliveryService {
 
-	public void getOrderDetails() throws DeliveryException;
+	public String getOrderDetails(String key, Integer orderId) throws DeliveryException, LoginException, OrderDetailsException;
 	
 }
