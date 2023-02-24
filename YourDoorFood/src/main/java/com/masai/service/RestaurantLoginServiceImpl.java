@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masai.exception.LoginException;
+import com.masai.exception.RestaurantException;
 import com.masai.model.CurrentUserSession;
 import com.masai.model.LoginDTO;
 import com.masai.model.Restaurant;
@@ -25,10 +26,10 @@ public class RestaurantLoginServiceImpl implements RestaurantLoginService{
 	private RestaurantRepo restaurantRepo;
 	
 	@Override
-	public CurrentUserSession login(LoginDTO dto) throws LoginException {
-		Restaurant restaurant = restaurantRepo.findByMobileNo();
+	public CurrentUserSession login(LoginDTO dto) throws LoginException, RestaurantException {
+		Restaurant restaurant = restaurantRepo.findByMobileNumber(dto.getMobileNumber());
 		
-		if(restaurant==null) throw new LoginException("Please enter a valid mobile number!");
+		if(restaurant==null) throw new RestaurantException("Please enter a valid mobile number!");
 		
 		Optional<CurrentUserSession> currentUserSession = sessionRepo.findById(restaurant.getRestaurantId());
 		
@@ -41,8 +42,6 @@ public class RestaurantLoginServiceImpl implements RestaurantLoginService{
 		CurrentUserSession genrateSession = new CurrentUserSession(restaurant.getRestaurantId(), key, LocalDateTime.now());
 		
 		sessionRepo.save(genrateSession);
-		
-		return genrateSession;
 		
 		return genrateSession;
 	}

@@ -46,5 +46,7 @@ public class Restaurant {
 		@ManyToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
 		private List<Item> items =new ArrayList<>();
 		private String managerName;
+		
+		@Size(min = 10,max = 10,message = "Mobile Number Should Be 10 digit's")
 		private String mobileNumber;
 }

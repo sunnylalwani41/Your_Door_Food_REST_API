@@ -1,7 +1,7 @@
 package com.masai.exception;
 
 @SuppressWarnings("serial")
-public class LoginException extends RuntimeException{
+public class LoginException extends Exception{
 
 	public LoginException() {
 		// TODO Auto-generated constructor stub

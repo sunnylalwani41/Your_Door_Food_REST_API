@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.masai.exception.CustomerAddresssException;
+import com.masai.exception.CustomerException;
 import com.masai.model.Customer;
 import com.masai.model.Restaurant;
 import com.masai.repository.CustomerRepo;
@@ -23,30 +23,30 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public Customer updateCustomer(Customer customer) {
+	public Customer updateCustomer(Customer customer) throws CustomerException {
 		Optional<Customer> customerOptional = customerRepo.findById(customer.getCustomerID());
 		if(customerOptional.isEmpty()){ 
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerException("This customer dose not exist");
 		}
 		return customerOptional.get();
 
 	}
 
 	@Override
-	public Customer removeCustomer(Customer customer) {
+	public Customer removeCustomer(Customer customer) throws CustomerException {
 		Optional<Customer> customerOptional = customerRepo.findById(customer.getCustomerID());
 		if(customerOptional.isEmpty()) {
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerException("This customer dose not exist");
 		}
 		customerRepo.delete(customerOptional.get());
 		return customerOptional.get();
 	}
 
 	@Override
-	public Customer viewCustomer(Customer customer) {
+	public Customer viewCustomer(Customer customer) throws CustomerException {
 		Optional<Customer> customer2 = customerRepo.findById(customer.getCustomerID());
 		if(customer2.isEmpty()) {
-			throw new CustomerAddresssException("This customer dose not exist");
+			throw new CustomerException("This customer dose not exist");
 		}
 		return customer2.get();
 	
