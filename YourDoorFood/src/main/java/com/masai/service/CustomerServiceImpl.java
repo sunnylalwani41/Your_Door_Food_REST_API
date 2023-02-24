@@ -33,8 +33,8 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public Customer removeCustomer(Customer customer) {
-		Optional<Customer> customerOptional = customerRepo.findById(customer.getCustomerID());
+	public Customer removeCustomer(Integer customerid) {
+		Optional<Customer> customerOptional = customerRepo.findById(customerid);
 		if(customerOptional.isEmpty()) {
 			throw new CustomerAddresssException("This customer does not exist");
 		}
@@ -43,8 +43,8 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public Customer viewCustomer(Customer customer) {
-		Optional<Customer> customer2 = customerRepo.findById(customer.getCustomerID());
+	public Customer viewCustomer(Integer customerid) {
+		Optional<Customer> customer2 = customerRepo.findById(customerid);
 		if(customer2.isEmpty()) {
 			throw new CustomerAddresssException("This customer does not exist");
 		}

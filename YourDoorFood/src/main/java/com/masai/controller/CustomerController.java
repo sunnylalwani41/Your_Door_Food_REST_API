@@ -16,6 +16,7 @@ import com.masai.model.Customer;
 import com.masai.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/customer")
@@ -25,37 +26,37 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	@PostMapping("/addcustomer")
-	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer)throws CustomerAddresssException{
+	public ResponseEntity<Customer> addCustomer(@Valid @RequestBody Customer customer)throws CustomerAddresssException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.addCustomer(customer), HttpStatus.CREATED);
 		return customerResponseEntity;
 	}
 	
 	@PutMapping("/updatecustomer")
-	public ResponseEntity<Customer> updateCustomerDetails(@RequestBody Customer customer)throws CustomerAddresssException{
+	public ResponseEntity<Customer> updateCustomerDetails(@Valid @RequestBody Customer customer)throws CustomerAddresssException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.updateCustomer(customer), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
-	@DeleteMapping("/updatecustomer")
-	public ResponseEntity<Customer> deleteCustomerByid(@RequestBody Customer customer)throws CustomerAddresssException{
-		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.removeCustomer(customer), HttpStatus.ACCEPTED);
+	@DeleteMapping("/updatecustomer/{Cid}")
+	public ResponseEntity<Customer> deleteCustomerByid(@Valid @PathVariable("Cid") Integer customerid)throws CustomerAddresssException{
+		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.removeCustomer(customerid), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
-	@DeleteMapping("/findcustomer")
-	public ResponseEntity<Customer> findCustomer(@RequestBody Customer customer)throws CustomerAddresssException{
-		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.viewCustomer(customer), HttpStatus.FOUND);
+	@DeleteMapping("/findcustomer/{Cid}")
+	public ResponseEntity<Customer> findCustomer(@Valid @PathVariable("Cid") Integer customerid)throws CustomerAddresssException{
+		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.viewCustomer(customerid), HttpStatus.FOUND);
 		return customerResponseEntity;
 	}
 	
 	@PutMapping("/updateAddress/{mobileNo}")
-	public ResponseEntity<String> updateCustomerAddress(@PathVariable("mobileNo") String mobileNo,@RequestBody Address address)throws CustomerAddresssException{
+	public ResponseEntity<String> updateCustomerAddress(@Valid @PathVariable("mobileNo") String mobileNo,@RequestBody Address address)throws CustomerAddresssException{
 		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updateAddress(mobileNo,address), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
 	@PutMapping("/updatePassword/{mobileNo}/{newpass}")
-	public ResponseEntity<String> updateCustomerPassword(@PathVariable("mobileNo") String mobileNo,@PathVariable("newpass") String newpass)throws CustomerAddresssException{
+	public ResponseEntity<String> updateCustomerPassword(@Valid @PathVariable("mobileNo") String mobileNo,@PathVariable("newpass") String newpass)throws CustomerAddresssException{
 		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updatepasword(mobileNo,newpass), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}

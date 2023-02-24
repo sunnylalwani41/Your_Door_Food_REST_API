@@ -10,9 +10,9 @@ public interface CustomerService {
 	
 	public Customer updateCustomer(Customer customer)throws CustomerAddresssException;
 	
-	public Customer removeCustomer(Customer customer)throws CustomerAddresssException;
+	public Customer removeCustomer(Integer customerid)throws CustomerAddresssException;
 	
-	public Customer viewCustomer(Customer customer)throws CustomerAddresssException;
+	public Customer viewCustomer(Integer customerid)throws CustomerAddresssException;
 	
 	public String updateAddress(String mobileNo,Address address) throws CustomerAddresssException;
 	
