@@ -1,6 +1,9 @@
 package com.masai.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -10,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.Email;
@@ -20,13 +24,14 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
+@EqualsAndHashCode
 
 public class Customer {
 	
@@ -65,5 +70,10 @@ public class Customer {
 	@NotNull
 	@Embedded
 	private Address address;
+	
+	
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<OrderDetails> orders = new ArrayList<>();
 
 }

@@ -13,6 +13,7 @@ import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
 import com.masai.model.FoodCart;
 import com.masai.model.Item;
+import com.masai.model.ItemRestaurantDTO;
 import com.masai.model.Restaurant;
 import com.masai.repository.CustomerRepo;
 import com.masai.repository.FoodCartRepo;
@@ -44,8 +45,9 @@ public class FoodCartSerivceImpl implements FoodCartService{
 	
 	@Override
 	public FoodCart addItemToCart(String mobileNo, String itemName, Integer restaurantId) throws FoodCartException, LoginException, ItemException, RestaurantException, CustomerException{
+		
 		Restaurant restaurant= restaurantRepo.findById(restaurantId).orElseThrow(() -> new RestaurantException("Restaurant does not exist"));
-		List<Item> items= restaurant.getItems();
+		Set<Item> items= restaurant.getItems();
 		Item item=null;
 		for(Item i: items) {
 			if(i.getItemName().equals(itemName)) {
@@ -62,20 +64,27 @@ public class FoodCartSerivceImpl implements FoodCartService{
 			throw new CustomerException("Customer is not registered");
 		}
 		CurrentUserSession existingUser= sessionRepo.findById(customer.getCustomerID()).orElseThrow(()-> new LoginException("User currently not logged-in"));
+		
+		
 		FoodCart foodCart= customer.getFoodCart();
-		Map<Item, Integer> itemMap= foodCart.getItems();
+		
+		Map<ItemRestaurantDTO, Integer> dtoMap= foodCart.getItemsDTO();
 		if(item.getQuantity()>0) {
-			if(itemMap.containsKey(item)) {
-				itemMap.put(item, itemMap.get(item)+1);
+			
+			ItemRestaurantDTO dto= new ItemRestaurantDTO(item, restaurant);
+			
+			if(dtoMap.containsKey(dto)) {
+				dtoMap.put(dto, dtoMap.get(dto)+1);
 			}
 			else {
-				itemMap.put(item, 1);
+				dtoMap.put(dto, 1);
 				
 			}
 		}
 		else {
 			throw new ItemException("Insufficient item quantity");
 		}
+		foodCart.setCustomer(customer);
 		
 		return cartRepo.save(foodCart);
 	}
@@ -95,18 +104,19 @@ public class FoodCartSerivceImpl implements FoodCartService{
 		}
 		CurrentUserSession existingUser= sessionRepo.findById(customer.getCustomerID()).orElseThrow(()-> new LoginException("User currently not logged-in"));
 		FoodCart foodCart= customer.getFoodCart();
-		Map<Item, Integer> itemMap= foodCart.getItems();
-		Item item=null;
-		for(Map.Entry<Item, Integer> entry:itemMap.entrySet()) {
-			if(entry.getKey().getItemName().equals(itemName)) {
-				item= entry.getKey();
+		Map<ItemRestaurantDTO, Integer> dtoMap= foodCart.getItemsDTO();
+		ItemRestaurantDTO dto= null;
+		for(Map.Entry<ItemRestaurantDTO, Integer> entry:dtoMap.entrySet()) {
+			if(entry.getKey().getItem().getItemName().equals(itemName)) {
+				dto= entry.getKey();
 				break;
 			}
 		}
-		if(item==null)
+		if(dto==null)
 			throw new FoodCartException("Item is not available in the cart, please add the item first");
-		if(item.getQuantity()>(quantity+itemMap.get(item))) {
-			itemMap.put(item, itemMap.get(item)+quantity);
+		if(dto.getItem().getQuantity()>(quantity+dtoMap.get(dto))) {
+			
+			dtoMap.put(dto, dtoMap.get(dto)+quantity);
 		}
 		else {
 			throw new ItemException("Insufficient item quantity");
@@ -116,36 +126,44 @@ public class FoodCartSerivceImpl implements FoodCartService{
 
 	@Override
 	public FoodCart reduceQuantity(String mobileNo, String itemName, int quantity) throws FoodCartException, LoginException, ItemException, CustomerException{
+
+
 		Customer customer= customerRepo.findByMobileNumber(mobileNo);
 		if(customer==null) {
 			throw new CustomerException("Customer is not registered");
 		}
 		CurrentUserSession existingUser= sessionRepo.findById(customer.getCustomerID()).orElseThrow(()-> new LoginException("User currently not logged-in"));
+		
+		
 		FoodCart foodCart= customer.getFoodCart();
-		Map<Item, Integer> itemMap= foodCart.getItems();
-		Item item=null;
-		for(Map.Entry<Item, Integer> entry:itemMap.entrySet()) {
-			if(entry.getKey().getItemName().equals(itemName)) {
-				item= entry.getKey();
+		
+		Map<ItemRestaurantDTO, Integer> dtoMap= foodCart.getItemsDTO();
+		ItemRestaurantDTO dto= null;
+		for(Map.Entry<ItemRestaurantDTO, Integer> entry:dtoMap.entrySet()) {
+			if(entry.getKey().getItem().getItemName().equals(itemName)) {
+				dto= entry.getKey();
 				break;
 			}
 		}
-		if(item==null)
-			throw new FoodCartException("Cart is empty or Item is not available in the cart, please enter a valid item");
-		if(item.getQuantity()==0) {
+		if(dto==null)
+			throw new FoodCartException("Item is not available in the cart, please add the item first");
+				
+		if(dto.getItem().getQuantity()==0) {
 			
-			itemMap.remove(item);
+			dtoMap.remove(dto);
 			cartRepo.save(foodCart);
-			throw new ItemException("Item is not available to the restaurant");
+			throw new ItemException("Item is already out of stock");
 			
 		}
-		if(quantity<=itemMap.get(item)) {
-			itemMap.put(item, itemMap.get(item)-quantity);
-			if(itemMap.get(item)==0)
-				itemMap.remove(item);
+		if(quantity<=dtoMap.get(dto)) {
+			dtoMap.put(dto, dtoMap.get(dto)-quantity);
+			if(dtoMap.get(dto)==0)
+				dtoMap.remove(dto);
 		}
 		else {
-			throw new ItemException("Insufficient item quantity int the cart");
+			dtoMap.remove(dto);
+			cartRepo.save(foodCart);
+			throw new ItemException(dto.getItem().getItemName()+ " is removed from the cart");
 		}
 		return cartRepo.save(foodCart);
 	}
@@ -157,36 +175,47 @@ public class FoodCartSerivceImpl implements FoodCartService{
 			throw new CustomerException("Customer is not registered");
 		}
 		CurrentUserSession existingUser= sessionRepo.findById(customer.getCustomerID()).orElseThrow(()-> new LoginException("User currently not logged-in"));
+		
+		
 		FoodCart foodCart= customer.getFoodCart();
-		Map<Item, Integer> itemMap= foodCart.getItems();
-		Item item=null;
-		for(Map.Entry<Item, Integer> entry:itemMap.entrySet()) {
-			if(entry.getKey().getItemName().equals(itemName)) {
-				item= entry.getKey();
+		
+		Map<ItemRestaurantDTO, Integer> dtoMap= foodCart.getItemsDTO();
+		ItemRestaurantDTO dto= null;
+		for(Map.Entry<ItemRestaurantDTO, Integer> entry:dtoMap.entrySet()) {
+			if(entry.getKey().getItem().getItemName().equals(itemName)) {
+				dto= entry.getKey();
 				break;
 			}
 		}
-		if(item==null)
-			throw new FoodCartException("Cart is empty or Item is not available in the cart, please enter a valid item");
-		
-		itemMap.remove(item);
+		if(dto==null)
+			throw new FoodCartException("Item is not available in the cart.");
+			
+		dtoMap.remove(dto);
 		
 		return cartRepo.save(foodCart);
 	}
-
+	
 	@Override
 	public FoodCart clearCart(String mobileNo, String itemName) throws FoodCartException, CustomerException, LoginException {
+
+		
 		Customer customer= customerRepo.findByMobileNumber(mobileNo);
 		if(customer==null) {
 			throw new CustomerException("Customer is not registered");
 		}
 		CurrentUserSession existingUser= sessionRepo.findById(customer.getCustomerID()).orElseThrow(()-> new LoginException("User currently not logged-in"));
-		FoodCart foodCart= customer.getFoodCart();
-		Map<Item, Integer> itemMap= foodCart.getItems();
-		if(itemMap.size()==0)
-			throw new FoodCartException("Cart already empty");
-		itemMap= new HashMap<Item, Integer>();
 		
+		
+		FoodCart foodCart= customer.getFoodCart();
+		
+		Map<ItemRestaurantDTO, Integer> dtoMap= foodCart.getItemsDTO();
+		
+		
+		
+		if(dtoMap.size()==0)
+			throw new FoodCartException("Cart already empty");
+		dtoMap.clear();
+		foodCart.setItemsDTO(dtoMap);
 		return cartRepo.save(foodCart);
 	}
 

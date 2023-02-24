@@ -1,11 +1,14 @@
 package com.masai.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,9 +23,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
+@EqualsAndHashCode
 public class Restaurant {
 
 	  @Id
@@ -46,9 +51,15 @@ public class Restaurant {
 		private String password;
 		
 		@ManyToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
-		private List<Item> items =new ArrayList<>();
+		private Set<Item> items =new HashSet<>(); 
+		
 		private String managerName;
 		
 		@Size(min = 10,max = 10,message = "Mobile Number Should Be 10 digit's")
 		private String mobileNumber;
+		
+		@JsonIgnore
+		@Embedded
+		@ElementCollection(fetch = FetchType.EAGER)
+		private Set<Customer> customers= new HashSet<>(); 
 }
