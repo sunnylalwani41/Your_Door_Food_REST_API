@@ -79,7 +79,7 @@ public class FoodCartSerivceImpl implements FoodCartService{
 	}
 
 	@Override
-	public FoodCart increaseQuantity(String mobileNo, String itemName, Integer restaurantId) throws FoodCartException, LoginException, ItemException, RestaurantException, CustomerException{
+	public FoodCart increaseQuantity(String mobileNo, String itemName) throws FoodCartException, LoginException, ItemException, CustomerException{
 //		Restaurant restaurant= restaurantRepo.findById(restaurantId).orElseThrow(() -> new RestaurantException("Restaurant does not exist"));
 //		List<Item> items= restaurant.getItems();
 		
