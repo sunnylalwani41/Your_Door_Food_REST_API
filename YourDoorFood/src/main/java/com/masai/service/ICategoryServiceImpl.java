@@ -2,9 +2,12 @@ package com.masai.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.masai.exception.CategoryException;
 import com.masai.model.Category;
 
+@Service
 public class ICategoryServiceImpl implements  ICategoryService{
 
 	@Override
