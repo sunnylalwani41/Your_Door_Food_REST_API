@@ -44,7 +44,7 @@ public class DeliveryServiceImpl implements DeliveryService{
 			return "Your order was delivered on time";
 		}
 		
-		String paymentStatus = orderDetails.getOrderStatus().toString();
+		String paymentStatus = orderDetails.getPaymentStatus().toString();
 		
 		String result = "Your order will be delivered at: "+ deliverTime.toLocalTime()  + " and your payment status is: "+ paymentStatus;
 		

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.masai.exception.CategoryException;
 import com.masai.exception.ItemException;
 import com.masai.exception.RestaurantException;
 import com.masai.model.Category;
@@ -69,10 +68,7 @@ public class ItemController {
 	
 	
 	@GetMapping("/view")
-
-	public ResponseEntity<Item> viewAllItemsByCategoryHandler(@RequestBody Category cat) throws ItemException
-
-	public ResponseEntity<List<Item>> viewAllItemsByCategoryHandler(Category cat) throws ItemException
+	public ResponseEntity<List<Item>> viewAllItemsByCategoryHandler(@RequestBody Category cat) throws ItemException
 
 	{
 		List<Item> items= iItemService.viewAllItemsByCategory(cat);
