@@ -27,10 +27,12 @@ public class Bill {
 	private LocalDateTime billDate;
 	
 	@OneToOne(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
-	private OrderDetails order;
+	private OrderDetails orderDetails;
 	
 	private Integer totalItems;
 	
-	private Double cost;
+	private final Integer deliveryCost = 50;
+	
+	private Double grandTotal;
 	
 }

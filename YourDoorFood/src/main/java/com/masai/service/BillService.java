@@ -1,32 +1,25 @@
 package com.masai.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.masai.exception.BillException;
-import com.masai.model.Bill;
-import com.masai.repository.BillRepo;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import com.masai.exception.BillException;
+import com.masai.exception.CustomerException;
+import com.masai.exception.LoginException;
+import com.masai.model.Bill;
+import com.masai.model.OrderDetails;
 
 
 
 public interface BillService {
 	
+	public Bill genrateBill(OrderDetails orderDetails) throws BillException;
 	
+	public Bill viewBill(String key, Integer billId) throws BillException, CustomerException, LoginException;
 	
-	public Bill addBill(Bill bill) throws BillException;
+	public List<Bill> viewBill(String key, LocalDate startDate, LocalDate endDate) throws BillException, CustomerException, LoginException;
 	
-	public Bill updateBill(Bill bill) throws BillException;
+	public List<Bill> viewBills(String key) throws BillException, LoginException, CustomerException;
 	
-	public Bill removeBill(Bill bill) throws BillException;
-	
-	public Bill viewBill(Bill bill) throws BillException;
-	
-	public List<Bill> viewBill(LocalDate startDate, LocalDate endDate) throws BillException;
-	
-	public List<Bill> viewBills(int customerId) throws BillException;
-	
-	public Double calCulateTotalCost(Bill bill) throws BillException;
+	public Double getTotalCost(String key, Integer billId) throws BillException, CustomerException, LoginException;
 }
