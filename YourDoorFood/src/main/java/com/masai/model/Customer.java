@@ -38,12 +38,11 @@ public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "userGenerator")
     @SequenceGenerator(name = "userGenerator",sequenceName = "usergen",allocationSize = 1,initialValue = 1)
-	private int customerID;
+	private Integer customerID;
 	
-	@NotNull
+	@NotNull(message = "First name is required")
 	private String firstName;
 	
-	@NotNull
 	private String lastName;
 	
 	@Max(value = 100,message = "Age Should be less then 100")
@@ -54,20 +53,23 @@ public class Customer {
 	
 	private String gender;
 	
+	@NotNull(message = "Mobile Number is required")
+	@NotBlank(message = "Enter vaild Mobile Number")
 	@Size(min = 10,max = 10,message = "Mobile Number Should Be 10 digits")
 	private String mobileNumber;
 	
-	@Email(message = "Please enter write email")
+	@NotNull(message = "Email is required")
+	@Email(message = "Please enter vaild email")
 	private String email;
 	
 	@JsonIgnore
-	@NotNull
-	@Pattern(regexp = "")
+	@NotNull(message = "Password is required")
+	@Pattern(regexp = "^[A-Z][0-9][a-z]*")
 	@Size(min = 4,max = 8)
 	@NotBlank(message = "Password should not be black")
 	private String password;
 	
-	@NotNull
+	@NotNull(message = "Address is required")
 	@Embedded
 	private Address address;
 	

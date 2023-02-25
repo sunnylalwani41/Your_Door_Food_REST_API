@@ -1,8 +1,6 @@
 package com.masai.model;
 
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -14,30 +12,29 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Address {
 	
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@NotNull
-	private int addressid;
 	
-	@NotNull
+	@NotNull(message = "Building Name name is required")
 	@Size(max = 20,message = "Building Name should be small")
-	private String buildingName;
+	private Integer HouseNO;
 	
 	@Size(max = 10,message = "Steet Number should be small")
 	private String steetNo;
-	
+
 	@Size(max = 15, message = "area name is to long")
 	private String area;
 	
-	@NotNull
+	@NotNull(message = "City name is required")
 	@Size(max = 5, message = "city name is to long")
 	private String city;
 	
-	@NotNull
+	@NotNull(message = "State name is required")
+	@Size(max = 20, message = "State name should  be less then 20")
 	private String state;
 	
 	private String country;
 	
-	@Size(min = 6,max = 6,message = "Pincode Should be 6 Digit's")
-	private int pincode;
+	@NotNull(message = "Pincode is required")
+	@Size(min = 6,max = 6,message = "Pincode Should be 6 Digits")
+	private String pincode;
 	
 }

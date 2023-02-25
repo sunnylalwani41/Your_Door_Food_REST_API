@@ -1,10 +1,9 @@
 package com.masai.service;
 
-import java.util.List;
 
 import com.masai.exception.CustomerException;
+import com.masai.model.Address;
 import com.masai.model.Customer;
-import com.masai.model.Restaurant;
 
 public interface CustomerService {
 	
@@ -12,9 +11,11 @@ public interface CustomerService {
 	
 	public Customer updateCustomer(Customer customer) throws CustomerException;
 	
-	public Customer removeCustomer(Customer customer) throws CustomerException;
+    public Customer removeCustomer(Integer customerid)throws CustomerException;
 	
-	public Customer viewCustomer(Customer customer) throws CustomerException;
+	public Customer viewCustomer(Integer customerid)throws CustomerException;
 	
-	public List<Customer> viewAllCustomers(Restaurant restaurant);
+	public String updateAddress(String mobileNo,Address address) throws CustomerException;
+	
+	public String updatepasword(String mobileNo,String currentPassword,String password) throws CustomerException;
 }
