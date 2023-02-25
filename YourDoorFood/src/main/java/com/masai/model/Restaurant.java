@@ -13,7 +13,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -50,7 +49,8 @@ public class Restaurant {
 		@Size(min = 8, max = 15, message = "Password length should be 8 to 15")
 		private String password;
 		
-		@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "restaurant")
+		@JsonIgnore
+		@OneToMany(cascade=CascadeType.ALL, mappedBy = "restaurant")
 		private List<Item> items = new ArrayList<>();
 		
 		private String managerName;
