@@ -1,81 +1,121 @@
 package com.masai.service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masai.exception.CustomerException;
+import com.masai.exception.LoginException;
 import com.masai.model.Address;
+import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
+import com.masai.model.ToBeDeletedCustomerAccount;
 import com.masai.repository.CustomerRepo;
+import com.masai.repository.DeletedCustomerAccountRepo;
+import com.masai.repository.SessionRepo;
 
 @Service
 public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	private CustomerRepo customerRepo;
+	
+	@Autowired
+	private SessionRepo sessionRepo;
+	
+	@Autowired
+	private CustomerLoginService customerLoginService;
+	
+	@Autowired
+	private DeletedCustomerAccountRepo deletedCustomerAccountRepo;
 
 	@Override
-	public Customer addCustomer(Customer customer) {	
+	public Customer addCustomer(Customer customer) throws CustomerException {
+		
+		Customer customerExist = customerRepo.findByMobileNumber(customer.getMobileNumber());
+		if(customerExist != null) throw new CustomerException("Customer already registered");
+		
 		return customerRepo.save(customer);
 	}
 
 	@Override
-	public Customer updateCustomer(Customer customer) throws CustomerException {
-		Optional<Customer> customerOptional = customerRepo.findById(customer.getCustomerID());
-		if(customerOptional.isEmpty()){ 
-			throw new CustomerException("This customer does not exist");
-		}
-		customerRepo.save(customer);
-		return customerOptional.get();
+	public Customer updateCustomer(String key, Customer customer) throws CustomerException, LoginException {
+		
+		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
+		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		Customer existingCustomer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
+		
+		if(customer.getAddress() != null)
+			existingCustomer.setAddress(customer.getAddress());
+		if(customer.getAge() != null)
+			existingCustomer.setAge(customer.getAge());
+		if(customer.getGender() != null)
+			existingCustomer.setGender(customer.getGender());
+		if(customer.getLastName() != null)
+			existingCustomer.setLastName(customer.getLastName());
+		if(customer.getFirstName() != null)
+			existingCustomer.setFirstName(customer.getFirstName());
+
+		return customerRepo.save(existingCustomer);
 
 	}
 
 	@Override
-	public Customer removeCustomer(Integer customerid) throws CustomerException {
-		Optional<Customer> customerOptional = customerRepo.findById(customerid);
-		if(customerOptional.isEmpty()) {
-			throw new CustomerException("This customer does not exist");
-		}
-		customerRepo.delete(customerOptional.get());
-		return customerOptional.get();
+	public String removeCustomer(String key, String password) throws CustomerException, LoginException {
+		
+		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
+		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		Customer existingCustomer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
+		
+		if (!existingCustomer.getPassword().equals(password)) throw new CustomerException("Enter valid password");
+		
+		ToBeDeletedCustomerAccount account = new ToBeDeletedCustomerAccount(existingCustomer.getCustomerID(), LocalDateTime.now());
+		deletedCustomerAccountRepo.save(account);
+		
+		customerLoginService.logout(key);
+		
+		return "Your account will be deleted after 24 hours, you can login again within 24 hours to avoid it";
+		
 	}
 
 	@Override
-	public Customer viewCustomer(Integer customerid) throws CustomerException {
-		Optional<Customer> customer2 = customerRepo.findById(customerid);
-		if(customer2.isEmpty()) {
-			throw new CustomerException("This customer does not exist");
-		}
-		return customer2.get();
+	public Customer viewCustomer(String key) throws CustomerException, LoginException {
+		
+		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
+		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		Customer existingCustomer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
+		
+		return existingCustomer;
 	
 	}
 
 	@Override
-	public String updateAddress(String mobileNo,Address address) throws CustomerException {
+	public String updateAddress(String key, Address address) throws CustomerException, LoginException {
 		
-		Customer customer = customerRepo.findByMobileNumber(mobileNo);
-		if(customer==null) {
-			throw new CustomerException("Customer does not exist");
-		}
+		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
+		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
+
 		customer.setAddress(address);
 		customerRepo.save(customer);
-		return "Address update sucssesfully";
+		
+		return "Address updated sucssesfully";
 	}
 
 	@Override
-	public String updatepasword(String mobileNo,String currentPassword,String password) throws CustomerException {
-		Customer customer = customerRepo.findByMobileNumber(mobileNo);
-		if(customer==null) {
-			throw new CustomerException("Customer does not exist");
-		}
-		if(!customer.getPassword().equals(currentPassword)) {
-			throw new CustomerException("Enter vaild password");
-		}
-		customer.setPassword(password);
+	public String updatepassword(String key, String mobileNo, String currentPassword, String newPassword) throws CustomerException, LoginException {
+		
+		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
+		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
+		
+		if(!customer.getPassword().equals(currentPassword)) throw new CustomerException("Enter vaild current password");
+		
+		customer.setPassword(newPassword);
 		customerRepo.save(customer);
-		return "Password update sucssesfully";
+		
+		return "Password updated sucssesfully";
 	}
 
 }
