@@ -10,8 +10,10 @@ import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
 import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
+import com.masai.model.ToBeDeletedCustomerAccount;
 import com.masai.model.LoginDTO;
 import com.masai.repository.CustomerRepo;
+import com.masai.repository.DeletedCustomerAccountRepo;
 import com.masai.repository.SessionRepo;
 
 import net.bytebuddy.utility.RandomString;
@@ -26,11 +28,14 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 	@Autowired
 	private CustomerRepo customerRepo;
 	
+	@Autowired
+	private DeletedCustomerAccountRepo deletedCustomerAccountRepo;
+	
 	@Override
 	public CurrentUserSession login(LoginDTO dto) throws LoginException, CustomerException {
 		Customer customer = customerRepo.findByMobileNumber(dto.getMobileNumber());
 		
-		if(customer==null) throw new CustomerException("Please enter a valid mobile number!");
+		if(customer == null) throw new CustomerException("Please enter a valid mobile number!");
 		
 		Optional<CurrentUserSession> currentUserSession = sessionRepo.findById(customer.getCustomerID());
 		
@@ -44,6 +49,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 		
 		sessionRepo.save(genrateSession);
 		
+		ToBeDeletedCustomerAccount account = deletedCustomerAccountRepo.findById(customer.getCustomerID()).get();
+		deletedCustomerAccountRepo.delete(account);
+		
 		return genrateSession;
 	}
 
@@ -52,7 +60,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		
-		if(currentUserSession==null) throw new LoginException("Invalid User key!");
+		if(currentUserSession == null) throw new LoginException("Invalid User key!");
 		
 		sessionRepo.delete(currentUserSession);
 		

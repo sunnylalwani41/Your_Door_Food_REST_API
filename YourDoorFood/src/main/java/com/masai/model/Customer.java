@@ -7,6 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,7 +47,7 @@ public class Customer {
 	private String lastName;
 	
 	@Max(value = 100,message = "Age Should be less then 100")
-	private int age;
+	private Integer age;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private FoodCart foodCart;
@@ -56,6 +57,7 @@ public class Customer {
 	@NotNull(message = "Mobile Number is required")
 	@NotBlank(message = "Enter vaild Mobile Number")
 	@Size(min = 10,max = 10,message = "Mobile Number Should Be 10 digits")
+	@Column(unique = true)
 	private String mobileNumber;
 	
 	@NotNull(message = "Email is required")

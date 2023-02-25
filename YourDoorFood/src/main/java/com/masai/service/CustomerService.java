@@ -2,20 +2,21 @@ package com.masai.service;
 
 
 import com.masai.exception.CustomerException;
+import com.masai.exception.LoginException;
 import com.masai.model.Address;
 import com.masai.model.Customer;
 
 public interface CustomerService {
 	
-    public Customer addCustomer(Customer customer);
+    public Customer addCustomer(Customer customer) throws CustomerException;
 	
-	public Customer updateCustomer(Customer customer) throws CustomerException;
+	public Customer updateCustomer(String key, Customer customer) throws CustomerException, LoginException;
 	
-    public Customer removeCustomer(Integer customerid)throws CustomerException;
+    public String removeCustomer(String key, String password)throws CustomerException, LoginException;
 	
-	public Customer viewCustomer(Integer customerid)throws CustomerException;
+	public Customer viewCustomer(String key)throws CustomerException, LoginException;
 	
-	public String updateAddress(String mobileNo,Address address) throws CustomerException;
+	public String updateAddress(String key, Address address) throws CustomerException, LoginException;
 	
-	public String updatepasword(String mobileNo,String currentPassword,String password) throws CustomerException;
+	public String updatepassword(String key, String mobileNo, String currentPassword, String newPassword) throws CustomerException, LoginException;
 }

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -55,7 +56,10 @@ public class Restaurant {
 		
 		private String managerName;
 		
+		@NotNull(message = "Mobile Number is required")
+		@NotBlank(message = "Enter vaild Mobile Number")
 		@Size(min = 10,max = 10,message = "Mobile Number Should Be 10 digit's")
+		@Column(unique = true)
 		private String mobileNumber;
 		
 		@JsonIgnore

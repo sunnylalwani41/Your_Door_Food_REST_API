@@ -35,6 +35,10 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 	public Restaurant addRestaurant(Integer verificationId, Restaurant restaurant) throws RestaurantException {
 
 		if(verificationId != 8080) throw new RestaurantException("Enter vaild verification id");
+		
+		Restaurant restaurantExist = restaurantRepo.findByMobileNumber(restaurant.getMobileNumber());
+		if(restaurantExist != null) throw new RestaurantException("Mobile number already registered");
+		
 		List<Restaurant> restaurants = restaurantRepo.findAll();
 		
 		for(Restaurant r : restaurants) {
@@ -58,12 +62,22 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 		List<Restaurant> restaurants = restaurantRepo.findAll();
 		
 		for(Restaurant r : restaurants) {
+			if(r.equals(restaurant)) continue;
 			if(r.getAddress().getPincode().equals(updatedRestaurant.getAddress().getPincode()) && r.getRestaurantName().equals(updatedRestaurant.getRestaurantName())) {
 				throw new RestaurantException("Can't change restaurant name, restaurant  with this name is already present in your area");
 			}
 		}
 		
-		return restaurantRepo.save(updatedRestaurant);
+		if(updatedRestaurant.getRestaurantName() != null)
+			restaurant.setRestaurantName(updatedRestaurant.getRestaurantName());
+		if(updatedRestaurant.getManagerName() != null)
+			restaurant.setManagerName(updatedRestaurant.getManagerName());
+		if(updatedRestaurant.getOpenTime() != null)
+			restaurant.setOpenTime(updatedRestaurant.getOpenTime());
+		if(updatedRestaurant.getCloseTime() != null)
+			restaurant.setCloseTime(updatedRestaurant.getCloseTime());
+		
+		return restaurantRepo.save(restaurant);
 	}
 
 	@Override
