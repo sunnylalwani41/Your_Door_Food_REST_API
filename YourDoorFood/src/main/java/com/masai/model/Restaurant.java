@@ -15,8 +15,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -50,8 +49,8 @@ public class Restaurant {
 		@Size(min = 8, max = 15, message = "Password length should be 8 to 15")
 		private String password;
 		
-		@ManyToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
-		private Set<Item> items =new HashSet<>(); 
+		@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "restaurant")
+		private List<Item> items = new ArrayList<>();
 		
 		private String managerName;
 		
