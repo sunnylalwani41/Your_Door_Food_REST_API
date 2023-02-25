@@ -9,12 +9,14 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.masai.exception.BillException;
 import com.masai.exception.CustomerException;
 import com.masai.exception.FoodCartException;
 import com.masai.exception.ItemException;
 import com.masai.exception.LoginException;
 import com.masai.exception.OrderDetailsException;
 import com.masai.exception.RestaurantException;
+import com.masai.model.Bill;
 import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
 import com.masai.model.FoodCart;
@@ -48,8 +50,11 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	private FoodCartRepo foodCartRepo;
 	
+	@Autowired
+	private BillService billService;
+	
 	@Override
-	public OrderDetails addOrder(String key, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException {
+	public OrderDetails placeOrder(String key, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
@@ -84,15 +89,21 @@ public class OrderServiceImpl implements OrderService{
 		orderDetails.setPaymentStatus(Status.valueOf(paymentType));
 		orderDetails.setTotalAmount(sum);
 		
-		customer.getOrders().add(orderDetails);
-		orderDetails.setCustomer(customer);
-		
 		foodCart.setItems(new HashMap<Item, Integer>());
 		foodCartRepo.save(foodCart);
 		
-		return orderDetailsRepo.save(orderDetails);
+		Bill bill = billService.genrateBill(orderDetails);
+		
+		orderDetails.setBill(bill);;
+		
+		orderDetails.setCustomer(customer);
+		orderDetails = orderDetailsRepo.save(orderDetails);
+		
+		customer.getOrders().add(orderDetails);
+		customerRepo.save(customer);
+		
+		return orderDetails;
 	}
-
 	
 	@Override
 	public String cancelOrder(String key, Integer orderId) throws OrderDetailsException, LoginException, CustomerException {
@@ -112,7 +123,6 @@ public class OrderServiceImpl implements OrderService{
 		}
 		
 		Map<Item, Integer> itemsMap = orderDetails.getItems();
-		
 		
 		for(Map.Entry<Item, Integer> entry : itemsMap.entrySet()) {
 			

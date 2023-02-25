@@ -73,6 +73,7 @@ public class FoodCartSerivceImpl implements FoodCartService{
 		}
 		
 		foodCart.setCustomer(customer);
+		customer.setFoodCart(foodCart);
 		
 		return cartRepo.save(foodCart);
 	}
@@ -99,6 +100,10 @@ public class FoodCartSerivceImpl implements FoodCartService{
 		
 		if(item.getQuantity() >= (quantity + itemsMap.get(item)))  itemsMap.put(item, itemsMap.get(item) + quantity);
 		else throw new ItemException("Insufficient item quantity");
+		
+//		foodCart.setItems(itemsMap);
+//		foodCart.setCustomer(customer);
+//		customer.setFoodCart(foodCart);
 		
 		return cartRepo.save(foodCart);
 	}

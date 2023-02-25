@@ -2,6 +2,7 @@ package com.masai.service;
 
 import java.util.List;
 
+import com.masai.exception.BillException;
 import com.masai.exception.CustomerException;
 import com.masai.exception.FoodCartException;
 import com.masai.exception.ItemException;
@@ -9,11 +10,10 @@ import com.masai.exception.LoginException;
 import com.masai.exception.OrderDetailsException;
 import com.masai.exception.RestaurantException;
 import com.masai.model.OrderDetails;
-import com.masai.model.Restaurant;
 
 
 public interface OrderService {
-	public OrderDetails addOrder(String uuId, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException,ItemException ;
+	public OrderDetails placeOrder(String uuId, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException,ItemException, BillException ;
 	
 	
 	public String cancelOrder(String key, Integer orderId) throws OrderDetailsException, LoginException, CustomerException;
