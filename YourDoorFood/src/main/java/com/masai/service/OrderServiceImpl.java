@@ -32,6 +32,7 @@ import com.masai.repository.RestaurantRepo;
 import com.masai.repository.SessionRepo;
 
 public class OrderServiceImpl implements OrderService{
+	
 	@Autowired
 	private OrderDetailsRepo orderDetailsRepo;
 	
@@ -53,8 +54,11 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	private BillService billService;
 	
+	@Autowired
+	private IRestaurantService restaurantService;
+	
 	@Override
-	public OrderDetails placeOrder(String key, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException {
+	public OrderDetails placeOrder(String key, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
@@ -65,9 +69,20 @@ public class OrderServiceImpl implements OrderService{
 		Map<Item, Integer> itemsMap = foodCart.getItems();
 		if(itemsMap.isEmpty()) throw new FoodCartException("Cart is empty");
 		
+		if(customer.getAddress() == null) throw new CustomerException("Please add adress to place order");
+		
 		for(Map.Entry<Item, Integer> entry : itemsMap.entrySet()) {
+			
 			if(entry.getKey().getQuantity()<entry.getValue()) {
 				throw new ItemException("Insufficient item quantity to the restaurant");				
+			}
+			
+			if(restaurantService.restaurantStatus(entry.getKey().getRestaurant().getRestaurantId()).equals("Closed")) {
+				throw new RestaurantException(entry.getKey().getRestaurant().getRestaurantName() + " is closed");
+			}
+			
+			if(!entry.getKey().getRestaurant().getAddress().getPincode().equals(customer.getAddress().getPincode())) {
+				throw new CustomerException("This item is not deliverable in your area");
 			}
 		}
 		
@@ -103,6 +118,7 @@ public class OrderServiceImpl implements OrderService{
 		customerRepo.save(customer);
 		
 		return orderDetails;
+		
 	}
 	
 	@Override
@@ -133,6 +149,7 @@ public class OrderServiceImpl implements OrderService{
 		
 		orderDetailsRepo.delete(orderDetails);
 		return "Order cancelled successfully";
+		
 	}
 
 	@Override
@@ -147,6 +164,7 @@ public class OrderServiceImpl implements OrderService{
 		if(orderDetails.getCustomer().getCustomerID() != customer.getCustomerID()) throw new OrderDetailsException("Please pass valid order Id");
 		
 		return orderDetails;
+		
 	}
 	
 	@Override
@@ -160,12 +178,12 @@ public class OrderServiceImpl implements OrderService{
 		
 		for(Customer c : customers) {
 			List<OrderDetails> temp = c.getOrders();
+			
 			for(OrderDetails o : temp) {
 				if(o.getOrderId() == orderId) {
 					Double sum = 0.0;
 					
 					Map<Item, Integer> itemsMap = o.getItems();
-					
 					
 					Map<Item, Integer> restaurantOrderDetailsMap= new HashMap<>();
 					
@@ -186,6 +204,7 @@ public class OrderServiceImpl implements OrderService{
 		}
 		
 		throw new OrderDetailsException("Please enter valid order id");
+		
 	}
 	
 	@Override
@@ -201,12 +220,12 @@ public class OrderServiceImpl implements OrderService{
 		
 		for(Customer c: customers) {
 			List<OrderDetails> temp = c.getOrders();
+			
 			for(OrderDetails o: temp) {
 				
 				Double sum = 0.0;
 				
 				Map<Item, Integer> itemsMap= o.getItems();
-				
 				
 				Map<Item, Integer> restaurantOrderDetailsMap= new HashMap<>();
 				
@@ -219,13 +238,13 @@ public class OrderServiceImpl implements OrderService{
 				o.setTotalAmount(sum);
 				o.setItems(restaurantOrderDetailsMap);
 				orders.add(o);
-				
 			}
 		}
 		
 		if(orders.isEmpty()) throw new OrderDetailsException("Orders Not Found");
 		
 		return orders;
+		
 	}
 
 	@Override
@@ -240,6 +259,7 @@ public class OrderServiceImpl implements OrderService{
 		if(orders.isEmpty()) throw new OrderDetailsException("You have not placed any orders");
 		
 		return orders;
+		
 	}
 	
 	@Override
@@ -268,7 +288,6 @@ public class OrderServiceImpl implements OrderService{
 			
 			Map<Item, Integer> itemsMap= o.getItems();
 			
-			
 			Map<Item, Integer> restaurantOrderDetailsMap= new HashMap<>();
 			
 			for(Map.Entry<Item, Integer> m: itemsMap.entrySet()) {
@@ -286,5 +305,6 @@ public class OrderServiceImpl implements OrderService{
 		if(orders.isEmpty()) throw new OrderDetailsException("Orders Not Found");
 		
 		return orders;
+		
 	}
 }

@@ -13,7 +13,7 @@ import com.masai.model.OrderDetails;
 
 
 public interface OrderService {
-	public OrderDetails placeOrder(String uuId, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException,ItemException, BillException ;
+	public OrderDetails placeOrder(String uuId, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException,ItemException, BillException, RestaurantException ;
 	
 	
 	public String cancelOrder(String key, Integer orderId) throws OrderDetailsException, LoginException, CustomerException;

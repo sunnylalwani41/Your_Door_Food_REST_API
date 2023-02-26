@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,14 +28,14 @@ public class OrderDetailsController {
 	private OrderService orderService;
 	
 	@GetMapping("/orderdetailsByCOD/{loginKey}")
-	public ResponseEntity<OrderDetails> placeOrderHandlerByCOD(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException{
+	public ResponseEntity<OrderDetails> placeOrderHandlerByCOD(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
 		
 		OrderDetails order= orderService.placeOrder(key, "CASH_ON_DELIVERY");
 		return new ResponseEntity<OrderDetails>(order, HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/orderdetailsByPrepaid/{loginKey}")
-	public ResponseEntity<OrderDetails> placeOrderHandlerByPrepaid(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException{
+	public ResponseEntity<OrderDetails> placeOrderHandlerByPrepaid(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
 		
 		OrderDetails order= orderService.placeOrder(key, "PAYMENT_SUCCESS");
 		return new ResponseEntity<OrderDetails>(order, HttpStatus.ACCEPTED);

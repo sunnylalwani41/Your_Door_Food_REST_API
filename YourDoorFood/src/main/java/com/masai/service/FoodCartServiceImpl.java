@@ -72,6 +72,12 @@ public class FoodCartServiceImpl implements FoodCartService{
 			throw new ItemException("Insufficient item quantity");
 		}
 		
+		if(customer.getAddress() == null) throw new CustomerException("Please add address first");
+		
+		if(!restaurant.getAddress().getPincode().equals(customer.getAddress().getPincode())) {
+			throw new CustomerException("This item is not deliverable in your area");
+		}
+		
 		foodCart.setCustomer(customer);
 		customer.setFoodCart(foodCart);
 		
