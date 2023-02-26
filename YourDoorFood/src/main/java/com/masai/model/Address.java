@@ -14,22 +14,23 @@ import lombok.NoArgsConstructor;
 public class Address {
 	
 	
-	@NotNull(message = "Building Name name is required")
-	@Min(value = 0, message = "Invalid House No")
+	@NotNull(message = "House number is required")
+	@Min(value = 1, message = "Invalid House No")
 	private Integer HouseNO;
 	
-	@Size(max = 20,message = "Steet Number should be small")
-	private String steetNo;
+	@Size(min = 5, max = 20, message = "street should be of minimum 5 and maximum 20 characters")
+	private String steetName;
 
-	@Size(max = 25, message = "area name is to long")
+	@NotNull
+	@Size(min = 5, max = 20, message = "area should be of minimum 5 and maximum 20 characters")
 	private String area;
 	
 	@NotNull(message = "City name is required")
-	@Size(max = 30, message = "city name is to long")
+	@Size(min = 5, max = 20, message = "city should be of minimum 5 and maximum 20 characters")
 	private String city;
 	
 	@NotNull(message = "State name is required")
-	@Size(max = 20, message = "State name should  be less then 20")
+	@Size(min = 5, max = 20, message = "state should be of minimum 5 and maximum 20 characters")
 	private String state;
 	
 	private String country;
