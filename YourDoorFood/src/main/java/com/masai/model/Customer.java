@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -49,6 +51,7 @@ public class Customer {
 	@Max(value = 100,message = "Age Should be less then 100")
 	private Integer age;
 	
+	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private FoodCart foodCart;
 	
@@ -64,7 +67,7 @@ public class Customer {
 	@Email(message = "Please enter vaild email")
 	private String email;
 	
-	@JsonIgnore
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotNull(message = "Password is required")
 	@Pattern(regexp = "^[A-Z][0-9][a-z]*")
 	@Size(min = 4,max = 8)
