@@ -18,5 +18,5 @@ public interface CustomerService {
 	
 	public String updateAddress(String key, Address address) throws CustomerException, LoginException;
 	
-	public String updatepassword(String key, String mobileNo, String currentPassword, String newPassword) throws CustomerException, LoginException;
+	public String updatepassword(String key,String currentPassword, String newPassword) throws CustomerException, LoginException;
 }
