@@ -58,8 +58,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 		if(currentUserSession == null) throw new LoginException("Please login to update your restaurant details");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
-		if(updatedRestaurant.getRestaurantId() != restaurant.getRestaurantId()) throw new RestaurantException("Invalid restaurent details");
-		
 		List<Restaurant> restaurants = restaurantRepo.findAll();
 		
 		for(Restaurant r : restaurants) {

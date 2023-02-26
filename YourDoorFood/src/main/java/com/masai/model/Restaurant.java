@@ -8,6 +8,8 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -47,10 +49,10 @@ public class Restaurant {
 		@Email
 		private String email;
 		
-		@JsonIgnore
-		@NotNull(message = "Enter vaild password")
-		@NotBlank(message = "Enter vaild password")
-		@NotEmpty(message = "Enter vaild password")
+		@JsonProperty(access = Access.WRITE_ONLY)
+		@NotNull(message = "Password is null")
+		@NotBlank(message = "blank")
+		@NotEmpty(message = "empty")
 		@Size(min = 8, max = 15, message = "Password length should be 8 to 15")
 		private String password;
 		

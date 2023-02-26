@@ -32,13 +32,14 @@ public class RestaurantController {
 	@PostMapping("/restaurants/{verficationId}")
 	public ResponseEntity<Restaurant> addRestuarants(@PathVariable("verficationId") Integer verificationId,@Valid @RequestBody Restaurant restaurant) throws RestaurantException{
 		return new ResponseEntity<>(resService.addRestaurant(verificationId,restaurant),HttpStatus.CREATED);
+		
 	}
 	
 	@PutMapping("/restaurants/{loginkey}")
-	public ResponseEntity<Restaurant> updateRestuarants( @PathVariable("loginkey") String  loginkey,@Valid @RequestBody Restaurant restaurant) throws RestaurantException, LoginException{
+	public ResponseEntity<Restaurant> updateRestuarants( @PathVariable("loginkey") String  loginkey, @RequestBody Restaurant restaurant) throws RestaurantException, LoginException{
 		return new ResponseEntity<>(resService.updateRestaurant(loginkey,restaurant),HttpStatus.ACCEPTED);
+		
 	}
-
 	
 	@GetMapping("/restaurants/{resId}")
 	public ResponseEntity<Restaurant> viewRestuarant(@PathVariable("resId") Integer resId) throws RestaurantException{
@@ -57,7 +58,6 @@ public class RestaurantController {
 	
 	}
 	
-	
 	@GetMapping("/restaurants/status/{resId}")	
 	public	ResponseEntity<String> restaurantStatus(@PathVariable("resId") Integer restaurantId) throws RestaurantException {
 			return new ResponseEntity<>(resService.restaurantStatus(restaurantId),HttpStatus.FOUND);
@@ -68,7 +68,7 @@ public class RestaurantController {
 		
 	}
 	
-	@GetMapping("/restaurants/{loginkey}")
+	@GetMapping("/restaurants/suggestions/{loginkey}")
 	public ResponseEntity<List<Suggestion>> viewSuggestions(@PathVariable("loginkey") String loginkey) throws LoginException, RestaurantException{
 		return new ResponseEntity<>(resService.viewSuggestions(loginkey),HttpStatus.FOUND);
 		
