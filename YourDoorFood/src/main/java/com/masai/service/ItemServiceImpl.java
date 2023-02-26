@@ -123,7 +123,7 @@ public class ItemServiceImpl implements ItemService{
 		List<Item> items= restaurant.getItems();
 		
 		for(Item i: items) {
-			if(i.getItemName().equals(itemName) && i.getQuantity()>0) {
+			if(i.getItemName().equalsIgnoreCase(itemName) && i.getQuantity()>0) {
 				
 				return i;
 			}
@@ -182,6 +182,7 @@ public class ItemServiceImpl implements ItemService{
 		String pincode= customer.getAddress().getPincode();
 		
 		List<Restaurant> restaurants = restaurantRepo.findAll();
+		if(restaurants.isEmpty()) throw new RestaurantException("No Restaurants found");
 		
 		List<Restaurant> filteredRestaurants= new ArrayList<>();
 		
@@ -197,7 +198,7 @@ public class ItemServiceImpl implements ItemService{
 			if(temp==null) continue;
 			
 			for(Item i: temp) {
-				if(i.getItemName().equals(itemName)) items.add(i);
+				if(i.getItemName().equalsIgnoreCase(itemName)) items.add(i);
 			}
 		}
 		
