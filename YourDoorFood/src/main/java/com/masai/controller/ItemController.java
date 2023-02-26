@@ -38,7 +38,7 @@ public class ItemController {
 	}
 
 	
-	@PutMapping("/items/{logginKey}")
+	@PutMapping("/items/update_item/{logginKey}")
 	public ResponseEntity<Item> updateItemsHandler(@PathVariable("logginKey") String key,
 			@Valid @RequestBody Item item) throws ItemException, LoginException, RestaurantException
 	{
@@ -55,7 +55,7 @@ public class ItemController {
 		return new ResponseEntity<>(items, HttpStatus.FOUND);
 	}
 	
-	@PutMapping("/items/{logginKey}/{itemId}")
+	@PutMapping("/items/set_not_available/{logginKey}/{itemId}")
 	public ResponseEntity<String> setItemNotAvailableHandler(@PathVariable("logginKey") String logginKey, @PathVariable("itemId") Integer itemId) throws ItemException, RestaurantException, LoginException{
 		
 		String result = iItemService.setItemNotAvailable(logginKey, itemId);
