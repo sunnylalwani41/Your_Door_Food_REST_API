@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,86 +12,74 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.masai.exception.CustomerException;
 import com.masai.exception.ItemException;
+import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
-import com.masai.model.Category;
 import com.masai.model.Item;
-import com.masai.model.Restaurant;
 import com.masai.service.IItemService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/items")
+@RequestMapping(value = "/YourDoorFood")
 public class ItemController {
 
 	@Autowired
 	private IItemService iItemService;
 
-	@PostMapping("/add/{rstname}")
-	public ResponseEntity<Item> addItemsHandler(@PathVariable("rstname") String resturantname,
-			@Valid @RequestBody Item item) throws ItemException
+	@PostMapping("/items/{logginKey}")
+	public ResponseEntity<Item> addItemsHandler(@PathVariable("logginKey") String key,
+			@Valid @RequestBody Item item) throws ItemException, LoginException, RestaurantException
 	{
-		Item addeditem = iItemService.addItem(resturantname, item);
+		Item addeditem = iItemService.addItem(key, item);
 
 		return new ResponseEntity<>(addeditem, HttpStatus.ACCEPTED);
 	}
 
 	
-	@PutMapping("/update/{rstname}")
-	public ResponseEntity<Item> updateItemsHandler(@PathVariable("rstname") String resturantname,
-			@Valid @RequestBody Item item) throws ItemException
+	@PutMapping("/items/{logginKey}")
+	public ResponseEntity<Item> updateItemsHandler(@PathVariable("logginKey") String key,
+			@Valid @RequestBody Item item) throws ItemException, LoginException, RestaurantException
 	{
-		Item updateditem = iItemService.updateItem(resturantname, item);
+		Item updateditem = iItemService.updateItem(key, item);
 
 		return new ResponseEntity<>(updateditem, HttpStatus.OK);
 	}
 	
-	@GetMapping("/view/{id}")
-	public ResponseEntity<Item> viewItemHandler(@PathVariable("id")Integer itemId) throws ItemException
+	@GetMapping("/items/{restaurantId}")
+	public ResponseEntity<List<Item>> viewAllItemsByRestaurantHandler(@PathVariable("restaurantId")Integer restaurantId) throws ItemException, RestaurantException
 	{
-		Item item = iItemService.viewItem(itemId);
-
-		return new ResponseEntity<>(item, HttpStatus.OK);
-	}
-	
-	
-	@DeleteMapping("/delete/{restntId}")
-	public ResponseEntity<Item> removeItemHandler(@PathVariable("restntId") Integer restaurantId)throws ItemException
-	{
-		Item allitem = iItemService.removeItem(restaurantId);
-
-		return new ResponseEntity<>(allitem, HttpStatus.OK);
-	}
-	
-	
-	@GetMapping("/view")
-	public ResponseEntity<List<Item>> viewAllItemsByCategoryHandler(@RequestBody Category cat) throws ItemException
-
-	{
-		List<Item> items= iItemService.viewAllItemsByCategory(cat);
+		List<Item> items = iItemService.viewAllItemsByRestaurant(restaurantId);
 
 		return new ResponseEntity<>(items, HttpStatus.FOUND);
 	}
 	
-	
-	@GetMapping("/viewallitembyres/{restaurentId}")
-	public ResponseEntity<List<Item>> viewAllItemsByRestaurantHandler(@RequestBody Restaurant res) throws ItemException, RestaurantException
-			
-	{
-		List<Item> allitem = iItemService.viewAllItemsByRestaurant(res);
-
-		return new ResponseEntity<>(allitem, HttpStatus.OK);
+	@PutMapping("/items/{logginKey}/{itemId}")
+	public ResponseEntity<String> setItemNotAvailableHandler(@PathVariable("logginKey") String logginKey, @PathVariable("itemId") Integer itemId) throws ItemException, RestaurantException, LoginException{
+		
+		String result = iItemService.setItemNotAvailable(logginKey, itemId);
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+		
 	}
 	
-	
-	@GetMapping("/viewallitembyname/{itemname}")
-	public ResponseEntity<List<Item>> viewAllItemsByNameHandler(@PathVariable("itemname") String itemname)
-			throws ItemException
-	{
-		List<Item> allitem = iItemService.viewAllItemsByName(itemname);
-
-		return new ResponseEntity<>(allitem, HttpStatus.OK);
+	@GetMapping("/items/{itemName}/{restaurantId}")
+	public ResponseEntity<Item> viewItemHandler(@PathVariable("itemName") String itemName,@PathVariable("restaurantId") Integer restaurantId) throws ItemException, RestaurantException{
+		
+		Item  item = iItemService.viewItem(itemName, restaurantId);
+		
+		return new ResponseEntity<>(item, HttpStatus.FOUND);
 	}
+	
+	@GetMapping("/items/{loginKey}/{itemName}")
+	public ResponseEntity<List<Item>> viewItemsOnMyAddressHandler(@PathVariable("loginKey") String loginKey, @PathVariable("itemName") String itemName) throws ItemException, RestaurantException, LoginException, CustomerException
+
+	{
+		List<Item> items= iItemService.viewItemsOnMyAddress(loginKey, itemName);
+
+		return new ResponseEntity<>(items, HttpStatus.FOUND);
+	}
+
 }

@@ -2,14 +2,11 @@ package com.masai.service;
 
 import java.util.List;
 
-import com.masai.exception.CategoryException;
 import com.masai.exception.CustomerException;
 import com.masai.exception.ItemException;
 import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
-import com.masai.model.Category;
 import com.masai.model.Item;
-import com.masai.model.Restaurant;
 
 public interface IItemService {
 
