@@ -1,6 +1,8 @@
 package com.masai.model;
 
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -14,17 +16,17 @@ public class Address {
 	
 	
 	@NotNull(message = "Building Name name is required")
-	@Size(max = 20,message = "Building Name should be small")
+	@Min(value = 0, message = "Invalid House No")
 	private Integer HouseNO;
 	
-	@Size(max = 10,message = "Steet Number should be small")
+	@Size(max = 20,message = "Steet Number should be small")
 	private String steetNo;
 
-	@Size(max = 15, message = "area name is to long")
+	@Size(max = 25, message = "area name is to long")
 	private String area;
 	
 	@NotNull(message = "City name is required")
-	@Size(max = 5, message = "city name is to long")
+	@Size(max = 30, message = "city name is to long")
 	private String city;
 	
 	@NotNull(message = "State name is required")

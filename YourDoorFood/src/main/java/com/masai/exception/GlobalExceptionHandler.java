@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(NoHandlerFoundException.class)
@@ -33,21 +33,23 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<MyErrorDetail> validationExceptionHandler(MethodArgumentNotValidException manve){
+	
+	
+	@ExceptionHandler(CustomerException.class)
+	public ResponseEntity<MyErrorDetail> customerExceptionHandlar(CustomerException customerAddresssException,WebRequest webRequest){
 		MyErrorDetail myError= new MyErrorDetail();
 		myError.setTimeStamp(LocalDateTime.now());
-		myError.setMessage(manve.getMessage());
-		myError.setDetails(manve.getBindingResult().getFieldError().getDefaultMessage());
+		myError.setMessage(customerAddresssException.getMessage());
+		myError.setDetails(webRequest.getDescription(false));
 		
 		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(CustomerException.class)
-	public ResponseEntity<MyErrorDetail> CustomerExceptionHandlar(CustomerException customerAddresssException,WebRequest webRequest){
+	@ExceptionHandler(RestaurantException.class)
+	public ResponseEntity<MyErrorDetail> restaurantExceptionHandlar(RestaurantException restaurantException,WebRequest webRequest){
 		MyErrorDetail myError= new MyErrorDetail();
 		myError.setTimeStamp(LocalDateTime.now());
-		myError.setMessage(customerAddresssException.getMessage());
+		myError.setMessage(restaurantException.getMessage());
 		myError.setDetails(webRequest.getDescription(false));
 		
 		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
@@ -84,4 +86,15 @@ public class GlobalExceptionHandler {
 		
 		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<MyErrorDetail> validationExceptionHandler(MethodArgumentNotValidException manve){
+		MyErrorDetail myError= new MyErrorDetail();
+		myError.setTimeStamp(LocalDateTime.now());
+		myError.setMessage("Validation error");
+		myError.setDetails(manve.getBindingResult().getFieldError().getDefaultMessage());
+		
+		return new ResponseEntity<MyErrorDetail>(myError, HttpStatus.BAD_GATEWAY);
+	}
+	
 }

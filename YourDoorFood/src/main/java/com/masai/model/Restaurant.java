@@ -43,7 +43,7 @@ public class Restaurant {
 		@Email
 		private String email;
 		
-		@JsonIgnore
+		//@JsonIgnore
 		@NotNull(message = "Enter vaild password")
 		@NotBlank(message = "Enter vaild password")
 		@NotEmpty(message = "Enter vaild password")
