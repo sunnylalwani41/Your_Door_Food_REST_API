@@ -35,8 +35,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @EqualsAndHashCode
+@Entity
 public class Restaurant {
 
 	  @Id

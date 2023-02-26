@@ -19,9 +19,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class FoodCart {
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator= "cartGenerator")

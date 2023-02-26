@@ -16,13 +16,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DateDTO {
 	
-	@JsonFormat(pattern = "dd:MM:yyyy")
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	@NotNull
 	@NotBlank
 	@NotEmpty
 	private LocalDate startDate;
 	
-	@JsonFormat(pattern = "dd:MM:yyyy")
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	@NotNull
 	@NotBlank
 	@NotEmpty

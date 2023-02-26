@@ -33,9 +33,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @EqualsAndHashCode
-
+@Entity
 public class Customer {
 	
 	@Id
