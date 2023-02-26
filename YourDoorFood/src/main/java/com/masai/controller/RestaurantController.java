@@ -19,7 +19,7 @@ import com.masai.model.Restaurant;
 import com.masai.model.Suggestion;
 import com.masai.service.RestaurantService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController

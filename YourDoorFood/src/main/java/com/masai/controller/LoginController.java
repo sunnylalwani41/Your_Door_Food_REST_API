@@ -15,8 +15,7 @@ import com.masai.model.CurrentUserSession;
 import com.masai.model.LoginDTO;
 import com.masai.service.CustomerLoginService;
 import com.masai.service.RestaurantLoginService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/YourDoorFood")

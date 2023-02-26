@@ -16,8 +16,7 @@ import com.masai.exception.LoginException;
 import com.masai.model.Address;
 import com.masai.model.Customer;
 import com.masai.service.CustomerService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController

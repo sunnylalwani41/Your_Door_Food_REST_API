@@ -24,10 +24,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @EqualsAndHashCode
 public class Restaurant {
@@ -43,7 +47,7 @@ public class Restaurant {
 		@Email
 		private String email;
 		
-		//@JsonIgnore
+		@JsonIgnore
 		@NotNull(message = "Enter vaild password")
 		@NotBlank(message = "Enter vaild password")
 		@NotEmpty(message = "Enter vaild password")

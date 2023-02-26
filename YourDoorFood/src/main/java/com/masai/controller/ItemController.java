@@ -18,8 +18,7 @@ import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
 import com.masai.model.Item;
 import com.masai.service.ItemService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
