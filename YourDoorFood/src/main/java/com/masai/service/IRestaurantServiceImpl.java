@@ -48,6 +48,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 		}
 		
 		return restaurantRepo.save(restaurant);
+		
 	}
 
 	@Override
@@ -78,6 +79,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 			restaurant.setCloseTime(updatedRestaurant.getCloseTime());
 		
 		return restaurantRepo.save(restaurant);
+		
 	}
 
 	@Override
@@ -85,6 +87,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 		Restaurant restaurant = restaurantRepo.findById(restaurantId).orElseThrow(() -> new RestaurantException("No restaurant found with this id: " + restaurantId));
 		
 		return restaurant;
+		
 	}
 
 	@Override
@@ -94,6 +97,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 		if(LocalTime.now().isAfter(restaurant.getCloseTime()) && LocalTime.now().isBefore(restaurant.getOpenTime())) return "Closed";
 		
 		return "Open";
+		
 	}
 	
 	@Override
@@ -111,6 +115,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 		if(nearByRestaurants.isEmpty()) throw new RestaurantException("No restaurants found in your area");
 		
 		return nearByRestaurants;
+		
 	}
 
 	@Override
@@ -139,6 +144,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 		if(filteredRestaurants.isEmpty()) throw new RestaurantException("No restaurants found in your area currently serving " + itemname + ". You can give suggestion to add your dish.");
 		
 		return filteredRestaurants;
+		
 	}
 
 	@Override
@@ -173,6 +179,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 		}
 		
 		return "Thankyou " + customer.getFirstName() + ", for the suggestion of " + suggestion.getItemName();
+		
 	}
 
 	@Override
@@ -185,6 +192,7 @@ public class IRestaurantServiceImpl implements IRestaurantService {
 		List<Suggestion> suggestions = restaurant.getSuggestions();
 		if(suggestions.isEmpty()) throw new RestaurantException("No suggestions found");
 		return suggestions;
+		
 	}
 	
 }
