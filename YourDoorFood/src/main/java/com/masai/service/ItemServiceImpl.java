@@ -189,20 +189,21 @@ public class ItemServiceImpl implements ItemService{
 		for(Restaurant r: restaurants) {
 			if(r.getAddress().getPincode().equals(pincode)) filteredRestaurants.add(r);
 		}
-		if(filteredRestaurants.isEmpty()) throw new RestaurantException("No Restaurant found in your area");
+		if(filteredRestaurants.isEmpty()) throw new RestaurantException("No Restaurants found in your area");
 		
 		List<Item> items= new ArrayList<>();
 		
 		for(Restaurant r: filteredRestaurants) {
-			List<Item> temp= r.getItems();
-			if(temp==null) continue;
+			List<Item> temp = r.getItems();
+			if(temp == null) continue;
 			
 			for(Item i: temp) {
 				if(i.getItemName().equalsIgnoreCase(itemName)) items.add(i);
 			}
+			
 		}
 		
-		if(items.isEmpty()) throw new ItemException("No Items Found");
+		if(items.isEmpty()) throw new ItemException("No Restaurants Found in your area with " + itemName);
 		return items;
 		
 	}
