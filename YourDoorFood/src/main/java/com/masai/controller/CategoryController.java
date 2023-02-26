@@ -16,47 +16,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.masai.exception.CategoryException;
 import com.masai.model.Category;
+import com.masai.model.Item;
 import com.masai.service.ICategoryService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-@RequestMapping(value = "/categories")
+@RequestMapping(value = "/yourDoorFood")
 public class CategoryController {
 
 	@Autowired
 	private ICategoryService iCategoryService;
 	
-	@PostMapping("/add")
-	public ResponseEntity<Category> addCategoryHandler(@RequestBody Category cat) {
-		return new ResponseEntity<>(iCategoryService.addCategory(cat),HttpStatus.CREATED);
+	@GetMapping("/categories/{cateName}")
+	public ResponseEntity<List<Item>> getItemsByCategoryName(@PathVariable("cateName") String categoryName) throws CategoryException {
+		return new ResponseEntity<>(iCategoryService.getItemsByCategoryName(categoryName),HttpStatus.FOUND);
 		
 	}
 	
-	 @PutMapping("/update/{id}")
-	public ResponseEntity<Category> updateCategoryHandler(@PathVariable("id") Integer catId) throws CategoryException{
-		return new  ResponseEntity<>(iCategoryService.updateCategory(catId),HttpStatus.ACCEPTED);
-		
-	}
-	 
-
-	 @DeleteMapping("/delete/{id}")
-	public ResponseEntity<Category> deleteCategoryHandler(@PathVariable("id") Integer catId) throws CategoryException{
-		return new  ResponseEntity<>(iCategoryService.removeCategory(catId),HttpStatus.ACCEPTED);
-		
-	}
-	 
-	 @GetMapping("/view/{cname}")
-		public ResponseEntity<Category> viewCategoryHandler(@PathVariable("cname") String catName) throws CategoryException{
-			return new  ResponseEntity<>(iCategoryService.viewCategory(catName),HttpStatus.FOUND);
-			
-		}
-	 
-	 @GetMapping("/view")
-		public ResponseEntity<List<Category>> viewAllCategoryHandler() throws CategoryException{
-			return new  ResponseEntity<>(iCategoryService.viewAllCategory(),HttpStatus.FOUND);
-			
-		}
+	
 	 
 	 
 }
