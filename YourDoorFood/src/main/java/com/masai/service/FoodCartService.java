@@ -16,5 +16,5 @@ public interface FoodCartService {
 	
 	public FoodCart removeItem(String key, String itemName) throws FoodCartException, CustomerException, LoginException;
 	
-	public FoodCart clearCart(String key, String itemName) throws FoodCartException, CustomerException, LoginException;
+	public FoodCart clearCart(String key) throws FoodCartException, CustomerException, LoginException;
 }

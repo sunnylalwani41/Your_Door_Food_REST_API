@@ -23,7 +23,7 @@ import com.masai.repository.RestaurantRepo;
 import com.masai.repository.SessionRepo;
 
 @Service
-public class FoodCartSerivceImpl implements FoodCartService{
+public class FoodCartServiceImpl implements FoodCartService{
 	@Autowired
 	private FoodCartRepo cartRepo;
 	
@@ -168,7 +168,7 @@ public class FoodCartSerivceImpl implements FoodCartService{
 	}
 	
 	@Override
-	public FoodCart clearCart(String key, String itemName) throws FoodCartException, CustomerException, LoginException {
+	public FoodCart clearCart(String key) throws FoodCartException, CustomerException, LoginException {
 
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);

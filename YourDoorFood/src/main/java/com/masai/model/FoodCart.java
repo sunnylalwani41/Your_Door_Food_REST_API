@@ -28,7 +28,7 @@ public class FoodCart {
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator= "cartGenerator")
 	@SequenceGenerator(name="cartGenerator", sequenceName = "cartGen", allocationSize = 1, initialValue = 100001)
-	private int cartId;
+	private Integer cartId;
 	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "foodCart")

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.convert.Jsr310Converters.DateToLocalDateConverter;
 import org.springframework.stereotype.Service;
 
 import com.masai.exception.BillException;
@@ -15,6 +16,7 @@ import com.masai.exception.LoginException;
 import com.masai.model.Bill;
 import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
+import com.masai.model.DateDTO;
 import com.masai.model.Item;
 import com.masai.model.OrderDetails;
 import com.masai.repository.BillRepo;
@@ -64,7 +66,10 @@ public class BillServiceImpl implements BillService{
 	}
 
 	@Override
-	public List<Bill> viewBill(String key, LocalDate startDate, LocalDate endDate) throws BillException, CustomerException, LoginException {
+	public List<Bill> viewBill(String key, DateDTO dateDTO) throws BillException, CustomerException, LoginException {
+		LocalDate startDate= dateDTO.getStartDate();
+		LocalDate endDate= dateDTO.getEndDate();
+		
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");

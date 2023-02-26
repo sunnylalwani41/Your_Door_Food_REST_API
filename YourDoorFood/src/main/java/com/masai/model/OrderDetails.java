@@ -32,7 +32,7 @@ public class OrderDetails {
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "ordersGenerator")
 	@SequenceGenerator(name= "ordersGenerator", sequenceName = "ordgen", allocationSize = 1, initialValue = 1001)
-	private int orderId;
+	private Integer orderId;
 	
 	private LocalDateTime orderDate;
 	
