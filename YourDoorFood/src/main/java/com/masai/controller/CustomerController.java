@@ -4,45 +4,62 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.masai.exception.CustomerException;
+import com.masai.exception.LoginException;
+import com.masai.model.Address;
 import com.masai.model.Customer;
 import com.masai.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/customer")
+@RequestMapping(value = "/YourDoorFood")
 public class CustomerController {
 	
 	@Autowired
 	private CustomerService customerService;
 	
-	@PostMapping("/addcustomer")
-	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer)throws CustomerException{
+	@PostMapping("/customers")
+	public ResponseEntity<Customer> addCustomer(@Valid @RequestBody Customer customer)throws CustomerException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.addCustomer(customer), HttpStatus.CREATED);
 		return customerResponseEntity;
 	}
 	
-	@PutMapping("/updatecustomer")
-	public ResponseEntity<Customer> updateCustomerDetails(@RequestBody Customer customer)throws CustomerException{
-		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.updateCustomer(customer), HttpStatus.ACCEPTED);
+	@PutMapping("/customers/{logginKey}")
+	public ResponseEntity<Customer> updateCustomerDetails(@PathVariable("logginKey") String key,@Valid @RequestBody Customer customer)throws CustomerException, LoginException{
+		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.updateCustomer(key,customer), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
-	@DeleteMapping("/updatecustomer")
-	public ResponseEntity<Customer> deleteCustomerByid(@RequestBody Customer customer)throws CustomerException{
-		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.removeCustomer(customer), HttpStatus.ACCEPTED);
+	@DeleteMapping("/customers/{logginKey}/{password}")
+	public ResponseEntity<String> deleteCustomerByid(@PathVariable("logginKey") String key, @PathVariable("password") String password)throws CustomerException, LoginException{
+		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.removeCustomer(key,password), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
-	@DeleteMapping("/findcustomer")
-	public ResponseEntity<Customer> findCustomer(@RequestBody Customer customer)throws CustomerException{
-		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.viewCustomer(customer), HttpStatus.FOUND);
+	@GetMapping("/customers/{logginKey}")
+	public ResponseEntity<Customer> findCustomer(@PathVariable("logginKey") String key)throws CustomerException, LoginException{
+		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.viewCustomer(key), HttpStatus.FOUND);
+		return customerResponseEntity;
+	}
+	
+	@PutMapping("/customers/{logginKey}")
+	public ResponseEntity<String> updateCustomerAddress(@PathVariable("logginKey") String key,@Valid @RequestBody Address address) throws CustomerException, LoginException {
+		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updateAddress(key,address), HttpStatus.ACCEPTED);
+		return customerResponseEntity;
+	}
+	
+	@PutMapping("/customers/{logginKey}/{currentPassword}/{newPassword}")
+	public ResponseEntity<String> updateCustomerPassword(@PathVariable("logginKey") String key,@PathVariable("currentPassword") String currentPassword,@PathVariable("newPassword") String newPassword) throws CustomerException, LoginException {
+		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updatepassword(key,currentPassword,newPassword), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 }
