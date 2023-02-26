@@ -1,5 +1,6 @@
 package com.masai.exception;
 
+@SuppressWarnings("serial")
 public class RestaurantException extends Exception {
 
 	public RestaurantException() {

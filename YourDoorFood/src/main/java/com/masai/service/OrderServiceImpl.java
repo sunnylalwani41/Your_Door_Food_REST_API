@@ -55,7 +55,7 @@ public class OrderServiceImpl implements OrderService{
 	private BillService billService;
 	
 	@Autowired
-	private IRestaurantService restaurantService;
+	private RestaurantService restaurantService;
 	
 	@Override
 	public OrderDetails placeOrder(String key, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException {

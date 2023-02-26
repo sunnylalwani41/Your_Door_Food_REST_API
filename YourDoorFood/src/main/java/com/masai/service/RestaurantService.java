@@ -8,7 +8,7 @@ import com.masai.exception.RestaurantException;
 import com.masai.model.Restaurant;
 import com.masai.model.Suggestion;
 
-public interface IRestaurantService {
+public interface RestaurantService {
 
 	public Restaurant addRestaurant(Integer verificationId, Restaurant restaurant)throws RestaurantException;
 	public Restaurant updateRestaurant(String key, Restaurant res)throws RestaurantException, LoginException;

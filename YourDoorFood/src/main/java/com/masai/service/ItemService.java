@@ -8,7 +8,7 @@ import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
 import com.masai.model.Item;
 
-public interface IItemService {
+public interface ItemService {
 
 	public Item addItem(String key,Item item)throws ItemException, LoginException, RestaurantException;
 	

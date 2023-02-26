@@ -11,7 +11,7 @@ import com.masai.model.Item;
 import com.masai.repository.CategoryRepo;
 
 @Service
-public class ICategoryServiceImpl implements  ICategoryService{
+public class CategoryServiceImpl implements  ICategoryService{
 	
 	@Autowired
 	private CategoryRepo categoryRepo;

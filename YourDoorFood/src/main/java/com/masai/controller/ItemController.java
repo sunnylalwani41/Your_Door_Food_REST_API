@@ -17,7 +17,7 @@ import com.masai.exception.ItemException;
 import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
 import com.masai.model.Item;
-import com.masai.service.IItemService;
+import com.masai.service.ItemService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 public class ItemController {
 
 	@Autowired
-	private IItemService iItemService;
+	private ItemService iItemService;
 
 	@PostMapping("/items/{logginKey}")
 	public ResponseEntity<Item> addItemsHandler(@PathVariable("logginKey") String key,

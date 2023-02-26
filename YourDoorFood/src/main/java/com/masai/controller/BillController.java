@@ -1,6 +1,5 @@
 package com.masai.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,7 @@ import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
 import com.masai.model.Bill;
 import com.masai.model.DateDTO;
-import com.masai.model.OrderDetails;
 import com.masai.service.BillService;
-import com.masai.service.BillServiceImpl;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;

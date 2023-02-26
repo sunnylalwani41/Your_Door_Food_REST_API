@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,7 @@ import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
 import com.masai.model.Restaurant;
 import com.masai.model.Suggestion;
-import com.masai.service.IRestaurantService;
+import com.masai.service.RestaurantService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
@@ -28,7 +27,7 @@ import jakarta.validation.Valid;
 public class RestaurantController {
 
 	@Autowired
-	private IRestaurantService resService;
+	private RestaurantService resService;
 	
 	@PostMapping("/restaurants/{verficationId}")
 	public ResponseEntity<Restaurant> addRestuarants(@PathVariable("verficationId") Integer verificationId,@Valid @RequestBody Restaurant restaurant) throws RestaurantException{

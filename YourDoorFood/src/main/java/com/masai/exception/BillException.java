@@ -1,5 +1,6 @@
 package com.masai.exception;
 
+@SuppressWarnings("serial")
 public class BillException extends Exception{
 	public BillException() {
 		// TODO Auto-generated constructor stub

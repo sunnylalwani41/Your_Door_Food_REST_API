@@ -20,7 +20,7 @@ import com.masai.repository.RestaurantRepo;
 import com.masai.repository.SessionRepo;
 
 @Service
-public class IRestaurantServiceImpl implements IRestaurantService {
+public class RestaurantServiceImpl implements RestaurantService {
 
 	@Autowired
 	private RestaurantRepo restaurantRepo;
