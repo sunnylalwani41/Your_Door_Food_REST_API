@@ -11,11 +11,21 @@ import com.masai.model.Suggestion;
 public interface RestaurantService {
 
 	public Restaurant addRestaurant(Integer verificationId, Restaurant restaurant)throws RestaurantException;
+	
 	public Restaurant updateRestaurant(String key, Restaurant res)throws RestaurantException, LoginException;
+	
 	public Restaurant viewRestaurant(Integer restaurantId)throws RestaurantException;
+	
 	public List<Restaurant> viewNearByRestaurant(String cityName, String pincode)throws RestaurantException;
+	
 	public List<Restaurant> viewRestaurantByItemName(String itemname, String pincode)throws RestaurantException;
+	
 	public String restaurantStatus(Integer restaurantId) throws RestaurantException;
+	
 	public String giveSuggestionAboutItem(String key, Suggestion suggestion, String pincode) throws CustomerException, LoginException, RestaurantException;
+	
 	public List<Suggestion> viewSuggestions(String key) throws LoginException, RestaurantException;
+
+	public String updatepassword(String key, String currentPassword, String newPassword) throws RestaurantException, LoginException;
+	
 }

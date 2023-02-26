@@ -194,5 +194,21 @@ public class RestaurantServiceImpl implements RestaurantService {
 		return suggestions;
 		
 	}
+
+	@Override
+	public String updatepassword(String key, String currentPassword, String newPassword) throws RestaurantException, LoginException {
+
+		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
+		if(currentUserSession == null) throw new LoginException("Please login to change password");
+		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
+		
+		if(!restaurant.getPassword().equals(currentPassword)) throw new RestaurantException("Enter vaild current password");
+		
+		restaurant.setPassword(newPassword);
+		restaurantRepo.save(restaurant);
+		
+		return "Password updated sucssesfully";
+		
+	}
 	
 }
