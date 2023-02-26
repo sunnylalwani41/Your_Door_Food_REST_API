@@ -45,7 +45,7 @@ public class ItemServiceImpl implements ItemService{
 		
 		CurrentUserSession currentUserSession= sessionRepo.findByUuid(key); 
 		if(currentUserSession==null) throw new LoginException("Please login to add item");
-		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please as Restaurant"));
+		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
 		if(item.getRestaurant()!=null && restaurant.getRestaurantId()!=item.getRestaurant().getRestaurantId()) throw new RestaurantException("Item can not be added"); 
 		
