@@ -35,8 +35,8 @@ public class RestaurantController {
 	}
 	
 	@PutMapping("/restaurants/{loginkey}")
-	public ResponseEntity<Restaurant> updateRestuarants( @PathVariable("loginkey") String  key,@Valid @RequestBody Restaurant restaurant) throws RestaurantException, LoginException{
-		return new ResponseEntity<>(resService.updateRestaurant(key,restaurant),HttpStatus.ACCEPTED);
+	public ResponseEntity<Restaurant> updateRestuarants( @PathVariable("loginkey") String  loginkey,@Valid @RequestBody Restaurant restaurant) throws RestaurantException, LoginException{
+		return new ResponseEntity<>(resService.updateRestaurant(loginkey,restaurant),HttpStatus.ACCEPTED);
 	}
 
 	
@@ -62,15 +62,15 @@ public class RestaurantController {
 	public	ResponseEntity<String> restaurantStatus(@PathVariable("resId") Integer restaurantId) throws RestaurantException {
 			return new ResponseEntity<>(resService.restaurantStatus(restaurantId),HttpStatus.FOUND);
 		}
-	@PostMapping("/restaurants/{loginkey}/{suggestion}/{pincode}")
-	public ResponseEntity<String> giveSuggestionsAboutItem(@PathVariable("loginkey") String key,@Valid @RequestBody Suggestion suggestion, @PathVariable("pincode") String pincode) throws CustomerException, LoginException, RestaurantException{
-		return new ResponseEntity<>(resService.giveSuggestionAboutItem(key,suggestion,pincode),HttpStatus.ACCEPTED);
+	@PostMapping("/restaurants/{loginkey}/{pincode}")
+	public ResponseEntity<String> giveSuggestionsAboutItem(@PathVariable("loginkey") String loginkey,@Valid @RequestBody Suggestion suggestion, @PathVariable("pincode") String pincode) throws CustomerException, LoginException, RestaurantException{
+		return new ResponseEntity<>(resService.giveSuggestionAboutItem(loginkey,suggestion,pincode),HttpStatus.ACCEPTED);
 		
 	}
 	
 	@GetMapping("/restaurants/{loginkey}")
-	public ResponseEntity<List<Suggestion>> viewSuggestions(@PathVariable("loginkey") String key) throws LoginException, RestaurantException{
-		return new ResponseEntity<>(resService.viewSuggestions(key),HttpStatus.FOUND);
+	public ResponseEntity<List<Suggestion>> viewSuggestions(@PathVariable("loginkey") String loginkey) throws LoginException, RestaurantException{
+		return new ResponseEntity<>(resService.viewSuggestions(loginkey),HttpStatus.FOUND);
 		
 	}
 }
