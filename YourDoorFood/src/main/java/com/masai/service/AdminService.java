@@ -7,7 +7,7 @@ import com.masai.model.Customer;
 
 public interface AdminService {
 
-	public String deletedAccounts();
+	public String deleteAccounts();
 	
 	public List<Customer> showToBeDeletedAccounts() throws CustomerException;
 }

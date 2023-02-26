@@ -61,7 +61,9 @@ public class RestaurantController {
 	@GetMapping("/restaurants/status/{resId}")	
 	public	ResponseEntity<String> restaurantStatus(@PathVariable("resId") Integer restaurantId) throws RestaurantException {
 			return new ResponseEntity<>(resService.restaurantStatus(restaurantId),HttpStatus.FOUND);
-		}
+			
+	}
+	
 	@PostMapping("/restaurants/{loginkey}/{pincode}")
 	public ResponseEntity<String> giveSuggestionsAboutItem(@PathVariable("loginkey") String loginkey,@Valid @RequestBody Suggestion suggestion, @PathVariable("pincode") String pincode) throws CustomerException, LoginException, RestaurantException{
 		return new ResponseEntity<>(resService.giveSuggestionAboutItem(loginkey,suggestion,pincode),HttpStatus.ACCEPTED);

@@ -19,11 +19,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -69,12 +69,11 @@ public class Customer {
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotNull(message = "Password is required")
-	@Pattern(regexp = "^[A-Z][0-9][a-z]*")
 	@Size(min = 4,max = 8)
 	@NotBlank(message = "Password should not be black")
 	private String password;
 	
-	@NotNull(message = "Address is required")
+	@Valid
 	@Embedded
 	private Address address;
 	

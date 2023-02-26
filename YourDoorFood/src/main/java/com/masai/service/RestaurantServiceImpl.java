@@ -34,6 +34,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Override
 	public Restaurant addRestaurant(Integer verificationId, Restaurant restaurant) throws RestaurantException {
 
+		List<CurrentUserSession> list = sessionRepo.findAll();
+		for(CurrentUserSession c : list) {
+			sessionRepo.delete(c);
+		}
+		
 		if(verificationId != 8080) throw new RestaurantException("Enter vaild verification id");
 		
 		Restaurant restaurantExist = restaurantRepo.findByMobileNumber(restaurant.getMobileNumber());
@@ -105,7 +110,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		List<Restaurant> restaurants = restaurantRepo.findAll();
 		
 		for(Restaurant r : restaurants) {
-			if(r.getAddress().getCity().equals(cityName) && r.getAddress().getPincode().equals(pincode)) {
+			if(r.getAddress().getCity().equalsIgnoreCase(cityName) && r.getAddress().getPincode().equals(pincode)) {
 				nearByRestaurants.add(r);
 			}
 		}

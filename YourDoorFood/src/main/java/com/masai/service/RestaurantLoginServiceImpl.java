@@ -1,6 +1,7 @@
 package com.masai.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,12 @@ public class RestaurantLoginServiceImpl implements RestaurantLoginService{
 	
 	@Override
 	public CurrentUserSession login(LoginDTO dto) throws LoginException, RestaurantException {
+		
+		List<CurrentUserSession> list = sessionRepo.findAll();
+		for(CurrentUserSession c : list) {
+			sessionRepo.delete(c);
+		}
+		
 		Restaurant restaurant = restaurantRepo.findByMobileNumber(dto.getMobileNumber());
 		
 		if(restaurant==null) throw new RestaurantException("Please enter a valid mobile number!");

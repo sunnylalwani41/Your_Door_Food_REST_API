@@ -1,6 +1,7 @@
 package com.masai.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,11 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public Customer addCustomer(Customer customer) throws CustomerException {
+		
+		List<CurrentUserSession> list = sessionRepo.findAll();
+		for(CurrentUserSession c : list) {
+			sessionRepo.delete(c);
+		}
 		
 		Customer customerExist = customerRepo.findByMobileNumber(customer.getMobileNumber());
 		if(customerExist != null) throw new CustomerException("Customer already registered");

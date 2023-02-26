@@ -1,5 +1,6 @@
 package com.masai.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +24,13 @@ public class AdminServiceImpl implements AdminService{
 	private DeletedCustomerAccountRepo deletedCustomerAccountRepo;
 	
 	@Override
-	public String deletedAccounts() {
+	public String deleteAccounts() {
 		Integer noOfAccountsDeleted = 0;
 		
 		List<ToBeDeletedCustomerAccount> deletedCustomerAccounts = deletedCustomerAccountRepo.findAll();
 		
 		for(ToBeDeletedCustomerAccount e : deletedCustomerAccounts) {
-			if(e.getDeletionSheduledAt().isAfter(e.getDeletionSheduledAt().plusHours(24))) {
+			if(LocalDateTime.now().isAfter(e.getDeletionSheduledAt().plusHours(24))) {
 				Customer customer = customerRepo.findById(e.getCustomerId()).get();
 				customerRepo.delete(customer);
 				noOfAccountsDeleted++;

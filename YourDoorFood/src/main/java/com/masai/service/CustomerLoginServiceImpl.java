@@ -1,6 +1,7 @@
 package com.masai.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,12 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 	
 	@Override
 	public CurrentUserSession login(LoginDTO dto) throws LoginException, CustomerException {
+		
+		List<CurrentUserSession> list = sessionRepo.findAll();
+		for(CurrentUserSession c : list) {
+			sessionRepo.delete(c);
+		}
+		
 		Customer customer = customerRepo.findByMobileNumber(dto.getMobileNumber());
 		
 		if(customer == null) throw new CustomerException("Please enter a valid mobile number!");
@@ -45,12 +52,15 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 
 		String key = RandomString.make(6);
 		
+		System.out.println(key);
 		CurrentUserSession genrateSession = new CurrentUserSession(customer.getCustomerID(), key, LocalDateTime.now());
-		
+		System.out.println("****************************");
 		sessionRepo.save(genrateSession);
+		System.out.println("----------------------------");
 		
-		ToBeDeletedCustomerAccount account = deletedCustomerAccountRepo.findById(customer.getCustomerID()).get();
-		deletedCustomerAccountRepo.delete(account);
+		Optional<ToBeDeletedCustomerAccount> account = deletedCustomerAccountRepo.findById(customer.getCustomerID());
+		if(!account.isEmpty()) 
+			deletedCustomerAccountRepo.delete(account.get());
 		
 		return genrateSession;
 	}
