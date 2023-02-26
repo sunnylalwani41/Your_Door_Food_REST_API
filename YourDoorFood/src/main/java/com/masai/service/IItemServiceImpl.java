@@ -60,7 +60,7 @@ public class IItemServiceImpl implements IItemService{
 			}
 		}
 		
-		String categoryName= item.getCategory().getCategoryName();
+		String categoryName = item.getCategory().getCategoryName();
 		
 		List<Category> categories= categoryRepo.findAll();
 		
@@ -81,7 +81,6 @@ public class IItemServiceImpl implements IItemService{
 			
 		}
 		
-		
 		category.getItems().add(item);
 		item.setCategory(category);
 		item.setRestaurant(restaurant);
@@ -94,32 +93,29 @@ public class IItemServiceImpl implements IItemService{
 	public Item updateItem(String key,Item item) throws ItemException, LoginException, RestaurantException {
 		
 		CurrentUserSession currentUserSession= sessionRepo.findByUuid(key); 
-	
 		if(currentUserSession==null) throw new LoginException("Please login to add item");
-		
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please as Restaurant"));
 		
-		if(item.getRestaurant()!=null && restaurant.getRestaurantId()!=item.getRestaurant().getRestaurantId()) throw new RestaurantException("Item can not be added"); 
-		
+		if(item.getRestaurant() != null && restaurant.getRestaurantId() != item.getRestaurant().getRestaurantId()) throw new RestaurantException("Item can not be added"); 
 		
 		List<Item> items= restaurant.getItems();
 		
 		Item verifiedItem = null;
 		for(Item i: items) {
-			if(i.getItemName().equals(item)) {
+			if(i.getItemName().equals(item.getItemName())) {
 				verifiedItem= i;
 				break;
 			}
 		}
 		
-		
 		if(verifiedItem==null) {
 			return addItem(key, item);
 		}
 		
-		verifiedItem.setCost(item.getCost());
-		verifiedItem.setQuantity(item.getQuantity());
-		
+		if(item.getCost() != null)
+			verifiedItem.setCost(item.getCost());
+		if(item.getQuantity() != null)
+			verifiedItem.setQuantity(item.getQuantity());
 		
 		return itemRepo.save(verifiedItem);
 	}

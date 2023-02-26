@@ -1,7 +1,5 @@
 package com.masai.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -48,7 +46,7 @@ public class Item {
 		@NotNull
 	 	@NotBlank
 	 	@NotEmpty
-		private double cost;
+		private Double cost;
 		
 		@ManyToOne(cascade =CascadeType.ALL)
 		private Restaurant restaurant;
