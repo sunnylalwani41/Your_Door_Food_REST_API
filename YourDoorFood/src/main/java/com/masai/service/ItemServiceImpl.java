@@ -96,7 +96,7 @@ public class ItemServiceImpl implements ItemService{
 		
 		Item verifiedItem = null;
 		for(Item i: items) {
-			if(i.getItemName().equals(item.getItemName())) {
+			if(i.getItemName().equalsIgnoreCase(item.getItemName())) {
 				verifiedItem= i;
 				break;
 			}

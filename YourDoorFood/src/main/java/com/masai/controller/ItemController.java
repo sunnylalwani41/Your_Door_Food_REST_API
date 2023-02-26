@@ -64,7 +64,7 @@ public class ItemController {
 		
 	}
 	
-	@GetMapping("/items/{itemName}/{restaurantId}")
+	@GetMapping("/items/get_item/{itemName}/{restaurantId}")
 	public ResponseEntity<Item> viewItemHandler(@PathVariable("itemName") String itemName,@PathVariable("restaurantId") Integer restaurantId) throws ItemException, RestaurantException{
 		
 		Item  item = iItemService.viewItem(itemName, restaurantId);
@@ -72,7 +72,7 @@ public class ItemController {
 		return new ResponseEntity<>(item, HttpStatus.FOUND);
 	}
 	
-	@GetMapping("/items/{loginKey}/{itemName}")
+	@GetMapping("/items/get_same_item_from_different_restaurants/{loginKey}/{itemName}")
 	public ResponseEntity<List<Item>> viewItemsOnMyAddressHandler(@PathVariable("loginKey") String loginKey, @PathVariable("itemName") String itemName) throws ItemException, RestaurantException, LoginException, CustomerException
 
 	{
