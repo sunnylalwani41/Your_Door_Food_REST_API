@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
@@ -119,8 +120,9 @@ public class CustomerServiceImpl implements CustomerService{
 		if(!customer.getPassword().equals(currentPassword)) throw new CustomerException("Enter vaild current password");
 		
 		customer.setPassword(newPassword);
+		System.out.println("------------------");
 		customerRepo.save(customer);
-		
+		System.out.println("=====================");
 		return "Password updated sucssesfully";
 	}
 

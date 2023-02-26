@@ -51,7 +51,7 @@ public class Customer {
 	private Integer age;
 	
 	@JsonIgnore
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL)
 	private FoodCart foodCart = new FoodCart();
 	
 	private String gender;

@@ -44,8 +44,6 @@ public class Item {
 		private Integer quantity;
 		
 		@NotNull
-	 	@NotBlank
-	 	@NotEmpty
 		private Double cost;
 		
 		@ManyToOne(cascade =CascadeType.ALL)
