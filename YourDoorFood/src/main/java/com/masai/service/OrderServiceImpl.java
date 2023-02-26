@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.masai.exception.BillException;
 import com.masai.exception.CustomerException;
@@ -31,6 +32,7 @@ import com.masai.repository.OrderDetailsRepo;
 import com.masai.repository.RestaurantRepo;
 import com.masai.repository.SessionRepo;
 
+@Service
 public class OrderServiceImpl implements OrderService{
 	
 	@Autowired

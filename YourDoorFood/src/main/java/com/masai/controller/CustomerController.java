@@ -51,7 +51,7 @@ public class CustomerController {
 		return customerResponseEntity;
 	}
 	
-	@PutMapping("/customers/{logginKey}")
+	@PutMapping("/customers/updateAddress/{logginKey}")
 	public ResponseEntity<String> updateCustomerAddress(@PathVariable("logginKey") String key,@Valid @RequestBody Address address) throws CustomerException, LoginException {
 		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updateAddress(key,address), HttpStatus.ACCEPTED);
 		return customerResponseEntity;

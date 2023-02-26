@@ -9,7 +9,7 @@ import com.masai.model.Restaurant;
 @Repository
 public interface RestaurantRepo extends JpaRepository<Restaurant, Integer>{
 
-	public Restaurant findByName(String resName);
+	public Restaurant findByRestaurantName(String restaurantName);
 
 	public Restaurant findByMobileNumber(String mobileNumer) throws RestaurantException;
 
