@@ -22,7 +22,7 @@ public class Bill {
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "billGenerator")
 	@SequenceGenerator(name= "billGenerator", sequenceName = "billGen", allocationSize = 1, initialValue = 10001)
-	private int billId;
+	private Integer billId;
 	
 	private LocalDateTime billDate;
 	

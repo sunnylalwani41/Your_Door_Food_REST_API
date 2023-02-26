@@ -7,6 +7,7 @@ import com.masai.exception.BillException;
 import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
 import com.masai.model.Bill;
+import com.masai.model.DateDTO;
 import com.masai.model.OrderDetails;
 
 
@@ -17,7 +18,7 @@ public interface BillService {
 	
 	public Bill viewBill(String key, Integer billId) throws BillException, CustomerException, LoginException;
 	
-	public List<Bill> viewBill(String key, LocalDate startDate, LocalDate endDate) throws BillException, CustomerException, LoginException;
+	public List<Bill> viewBill(String key, DateDTO dateDTO) throws BillException, CustomerException, LoginException;
 	
 	public List<Bill> viewBills(String key) throws BillException, LoginException, CustomerException;
 	
