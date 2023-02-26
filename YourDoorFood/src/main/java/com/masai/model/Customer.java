@@ -53,7 +53,7 @@ public class Customer {
 	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private FoodCart foodCart;
+	private FoodCart foodCart = new FoodCart();
 	
 	private String gender;
 	
@@ -76,7 +76,6 @@ public class Customer {
 	@Valid
 	@Embedded
 	private Address address;
-	
 	
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL)

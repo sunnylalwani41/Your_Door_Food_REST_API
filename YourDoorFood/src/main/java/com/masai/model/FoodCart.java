@@ -17,13 +17,11 @@ import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class FoodCart {
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator= "cartGenerator")

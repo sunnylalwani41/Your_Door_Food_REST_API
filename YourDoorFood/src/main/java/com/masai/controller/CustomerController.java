@@ -56,7 +56,7 @@ public class CustomerController {
 		return customerResponseEntity;
 	}
 	
-	@PutMapping("/customers/{logginKey}/{currentPassword}/{newPassword}")
+	@PutMapping("/customers/update_password/{logginKey}/{currentPassword}/{newPassword}")
 	public ResponseEntity<String> updateCustomerPassword(@PathVariable("logginKey") String key,@PathVariable("currentPassword") String currentPassword,@PathVariable("newPassword") String newPassword) throws CustomerException, LoginException {
 		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updatepassword(key,currentPassword,newPassword), HttpStatus.ACCEPTED);
 		return customerResponseEntity;

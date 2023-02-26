@@ -51,12 +51,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 		if(!customer.getPassword().equals(dto.getPassword())) throw new LoginException("Incorrect password!");
 
 		String key = RandomString.make(6);
-		
-		System.out.println(key);
+
 		CurrentUserSession genrateSession = new CurrentUserSession(customer.getCustomerID(), key, LocalDateTime.now());
-		System.out.println("****************************");
 		sessionRepo.save(genrateSession);
-		System.out.println("----------------------------");
 		
 		Optional<ToBeDeletedCustomerAccount> account = deletedCustomerAccountRepo.findById(customer.getCustomerID());
 		if(!account.isEmpty()) 
