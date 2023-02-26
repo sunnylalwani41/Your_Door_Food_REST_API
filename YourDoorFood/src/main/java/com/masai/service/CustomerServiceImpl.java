@@ -104,7 +104,7 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public String updatepassword(String key, String mobileNo, String currentPassword, String newPassword) throws CustomerException, LoginException {
+	public String updatepassword(String key, String currentPassword, String newPassword) throws CustomerException, LoginException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		if(currentUserSession == null) throw new LoginException("Please login to update your details");
