@@ -176,7 +176,6 @@ public class FoodCartServiceImpl implements FoodCartService{
 	@Override
 	public FoodCart clearCart(String key) throws FoodCartException, CustomerException, LoginException {
 
-		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Customer customer= customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
@@ -190,6 +189,18 @@ public class FoodCartServiceImpl implements FoodCartService{
 		itemsMap.clear();
 		
 		return cartRepo.save(foodCart);
+	}
+
+	@Override
+	public Map<Item, Integer> viewCart(String key) throws LoginException, CustomerException, FoodCartException {
+
+		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
+		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		Customer customer= customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
+		
+		if(customer.getFoodCart().getItems().isEmpty()) throw new FoodCartException("Food cart is Empty");
+		
+		return customer.getFoodCart().getItems();
 	}
 
 }

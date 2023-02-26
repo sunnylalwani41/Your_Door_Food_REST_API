@@ -1,6 +1,7 @@
 package com.masai.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.masai.exception.CustomerException;
 import com.masai.exception.ItemException;
@@ -20,7 +21,7 @@ public interface ItemService {
 	
 	public Item viewItem(String itemName, Integer restaurantId) throws ItemException, RestaurantException;
 	
-	public List<Item> viewItemsOnMyAddress(String key, String itemName) throws ItemException, RestaurantException, LoginException, CustomerException;
+	public Map<String, Item> viewItemsOnMyAddress(String key, String itemName) throws ItemException, RestaurantException, LoginException, CustomerException;
 	
 	
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
@@ -63,6 +62,8 @@ public class CustomerServiceImpl implements CustomerService{
 			existingCustomer.setLastName(customer.getLastName());
 		if(customer.getFirstName() != null)
 			existingCustomer.setFirstName(customer.getFirstName());
+		if(customer.getEmail() != null)
+			existingCustomer.setEmail(customer.getEmail());
 
 		return customerRepo.save(existingCustomer);
 

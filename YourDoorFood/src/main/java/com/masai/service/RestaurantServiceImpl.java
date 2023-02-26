@@ -97,7 +97,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	public String restaurantStatus(Integer restaurantId) throws RestaurantException {
 		Restaurant restaurant = restaurantRepo.findById(restaurantId).orElseThrow(() -> new RestaurantException("No restaurant found with this id: " + restaurantId));
 		
-		if(LocalTime.now().isAfter(restaurant.getCloseTime()) && LocalTime.now().isBefore(restaurant.getOpenTime())) return "Closed";
+		if(LocalTime.now().isAfter(restaurant.getCloseTime()) || LocalTime.now().isBefore(restaurant.getOpenTime())) return "Closed";
 		
 		return "Open";
 		

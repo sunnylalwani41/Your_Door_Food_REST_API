@@ -1,6 +1,7 @@
 package com.masai.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class ItemController {
 	@Autowired
 	private ItemService iItemService;
 
-	@PostMapping("/items/{logginKey}")
+	@PostMapping("/items/restaurants/{logginKey}")
 	public ResponseEntity<Item> addItemsHandler(@PathVariable("logginKey") String key,
 			@Valid @RequestBody Item item) throws ItemException, LoginException, RestaurantException
 	{
@@ -38,7 +39,7 @@ public class ItemController {
 	}
 
 	
-	@PutMapping("/items/update_item/{logginKey}")
+	@PutMapping("/items/restaurants/update_item/{logginKey}")
 	public ResponseEntity<Item> updateItemsHandler(@PathVariable("logginKey") String key,
 			@Valid @RequestBody Item item) throws ItemException, LoginException, RestaurantException
 	{
@@ -55,7 +56,7 @@ public class ItemController {
 		return new ResponseEntity<>(items, HttpStatus.FOUND);
 	}
 	
-	@PutMapping("/items/set_not_available/{logginKey}/{itemId}")
+	@PutMapping("/items/restaurants/set_not_available/{logginKey}/{itemId}")
 	public ResponseEntity<String> setItemNotAvailableHandler(@PathVariable("logginKey") String logginKey, @PathVariable("itemId") Integer itemId) throws ItemException, RestaurantException, LoginException{
 		
 		String result = iItemService.setItemNotAvailable(logginKey, itemId);
@@ -72,11 +73,11 @@ public class ItemController {
 		return new ResponseEntity<>(item, HttpStatus.FOUND);
 	}
 	
-	@GetMapping("/items/get_same_item_from_different_restaurants/{loginKey}/{itemName}")
-	public ResponseEntity<List<Item>> viewItemsOnMyAddressHandler(@PathVariable("loginKey") String loginKey, @PathVariable("itemName") String itemName) throws ItemException, RestaurantException, LoginException, CustomerException
+	@GetMapping("/items/same_item_from_nearbyme_restaurants/{loginKey}/{itemName}")
+	public ResponseEntity<Map<String, Item>> viewItemsOnMyAddressHandler(@PathVariable("loginKey") String loginKey, @PathVariable("itemName") String itemName) throws ItemException, RestaurantException, LoginException, CustomerException
 
 	{
-		List<Item> items= iItemService.viewItemsOnMyAddress(loginKey, itemName);
+		Map<String, Item> items= iItemService.viewItemsOnMyAddress(loginKey, itemName);
 
 		return new ResponseEntity<>(items, HttpStatus.FOUND);
 	}

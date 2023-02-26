@@ -1,7 +1,9 @@
 package com.masai.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -142,13 +144,15 @@ public class ItemServiceImpl implements ItemService{
 		
 		Item item= itemRepo.findById(itemId).orElseThrow(() -> new ItemException("Item not found with id "+ itemId));
 		
+		if(item.getRestaurant() != null && restaurant.getRestaurantId() != item.getRestaurant().getRestaurantId()) throw new RestaurantException("Item can not be updated");
+		
 		if(item.getRestaurant().getRestaurantId()!=restaurant.getRestaurantId()) throw new ItemException("Item not found");
 		
 		item.setQuantity(0);
 		
 		itemRepo.save(item);
 		
-		return "Item successfully set to not available";
+		return item.getItemName() + " successfully set to not available";
 		
 	}
 
@@ -171,13 +175,13 @@ public class ItemServiceImpl implements ItemService{
 	}
 
 	@Override
-	public List<Item> viewItemsOnMyAddress(String key, String itemName) throws ItemException, RestaurantException, LoginException, CustomerException{
+	public Map<String, Item> viewItemsOnMyAddress(String key, String itemName) throws ItemException, RestaurantException, LoginException, CustomerException{
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login first");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
-		if(customer.getAddress()==null) throw new CustomerException("please add address first");
+		if(customer.getAddress()==null) throw new CustomerException("Please add address first");
 		
 		String pincode= customer.getAddress().getPincode();
 		
@@ -204,7 +208,11 @@ public class ItemServiceImpl implements ItemService{
 		}
 		
 		if(items.isEmpty()) throw new ItemException("No Restaurants Found in your area with " + itemName);
-		return items;
+		
+		Map<String, Item> itemsMap = new HashMap<>();
+		for(Item i: items) itemsMap.put(i.getRestaurant().getManagerName(), i);
+		
+		return itemsMap;
 		
 	}
 }

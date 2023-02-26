@@ -23,19 +23,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/yourdoorfood")
+@RequestMapping(value = "/YourDoorFood")
 public class RestaurantController {
 
 	@Autowired
 	private RestaurantService resService;
 	
-	@PostMapping("/restaurants/{verficationId}")
+	@PostMapping("/restaurants/register/{verficationId}")
 	public ResponseEntity<Restaurant> addRestuarants(@PathVariable("verficationId") Integer verificationId,@Valid @RequestBody Restaurant restaurant) throws RestaurantException{
 		return new ResponseEntity<>(resService.addRestaurant(verificationId,restaurant),HttpStatus.CREATED);
 		
 	}
 	
-	@PutMapping("/restaurants/{loginkey}")
+	@PutMapping("/restaurants/update_basic_details/{loginkey}")
 	public ResponseEntity<Restaurant> updateRestuarants( @PathVariable("loginkey") String  loginkey, @RequestBody Restaurant restaurant) throws RestaurantException, LoginException{
 		return new ResponseEntity<>(resService.updateRestaurant(loginkey,restaurant),HttpStatus.ACCEPTED);
 		
@@ -64,7 +64,7 @@ public class RestaurantController {
 			
 	}
 	
-	@PostMapping("/restaurants/{loginkey}/{pincode}")
+	@PostMapping("/restaurants/suggest_item/customers/{loginkey}/{pincode}")
 	public ResponseEntity<String> giveSuggestionsAboutItem(@PathVariable("loginkey") String loginkey,@Valid @RequestBody Suggestion suggestion, @PathVariable("pincode") String pincode) throws CustomerException, LoginException, RestaurantException{
 		return new ResponseEntity<>(resService.giveSuggestionAboutItem(loginkey,suggestion,pincode),HttpStatus.ACCEPTED);
 		

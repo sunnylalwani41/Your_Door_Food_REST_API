@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.masai.exception.CategoryException;
 import com.masai.model.Item;
-import com.masai.service.ICategoryService;
+import com.masai.service.CategoryService;
 
 @RestController
 @RequestMapping(value = "/yourDoorFood")
 public class CategoryController {
 
 	@Autowired
-	private ICategoryService iCategoryService;
+	private CategoryService iCategoryService;
 	
 	@GetMapping("/categories/{cateName}")
 	public ResponseEntity<List<Item>> getItemsByCategoryName(@PathVariable("cateName") String categoryName) throws CategoryException {

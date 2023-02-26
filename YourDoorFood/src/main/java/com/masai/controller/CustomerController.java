@@ -26,31 +26,31 @@ public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
 	
-	@PostMapping("/customers")
+	@PostMapping("/customers/create_account")
 	public ResponseEntity<Customer> addCustomer(@Valid @RequestBody Customer customer)throws CustomerException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.addCustomer(customer), HttpStatus.CREATED);
 		return customerResponseEntity;
 	}
 	
-	@PutMapping("/customers/{logginKey}")
+	@PutMapping("/customers/update_basic_details)/{logginKey}")
 	public ResponseEntity<Customer> updateCustomerDetails(@PathVariable("logginKey") String key,@Valid @RequestBody Customer customer)throws CustomerException, LoginException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.updateCustomer(key,customer), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
-	@DeleteMapping("/customers/{logginKey}/{password}")
+	@DeleteMapping("/customers/delete_account/{logginKey}/{password}")
 	public ResponseEntity<String> deleteCustomerByid(@PathVariable("logginKey") String key, @PathVariable("password") String password)throws CustomerException, LoginException{
 		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.removeCustomer(key,password), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 	
-	@GetMapping("/customers/{logginKey}")
+	@GetMapping("/customers/view_profile/{logginKey}")
 	public ResponseEntity<Customer> findCustomer(@PathVariable("logginKey") String key)throws CustomerException, LoginException{
 		ResponseEntity<Customer> customerResponseEntity = new ResponseEntity<>(customerService.viewCustomer(key), HttpStatus.FOUND);
 		return customerResponseEntity;
 	}
 	
-	@PutMapping("/customers/updateAddress/{logginKey}")
+	@PutMapping("/customers/update_address/{logginKey}")
 	public ResponseEntity<String> updateCustomerAddress(@PathVariable("logginKey") String key,@Valid @RequestBody Address address) throws CustomerException, LoginException {
 		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updateAddress(key,address), HttpStatus.ACCEPTED);
 		return customerResponseEntity;

@@ -64,6 +64,7 @@ public class Restaurant {
 		
 		private String managerName;
 		
+		@JsonProperty(access = Access.WRITE_ONLY)
 		@NotNull(message = "Mobile Number is required")
 		@NotBlank(message = "Enter vaild Mobile Number")
 		@Size(min = 10,max = 10,message = "Mobile Number Should Be 10 digit's")
@@ -76,8 +77,10 @@ public class Restaurant {
 		private Set<Customer> customers= new HashSet<>();
 		
 		@JsonFormat(pattern = "HH:mm:ss")
+		@NotNull(message = "Opening time is required")
 		private LocalTime openTime;
 		@JsonFormat(pattern = "HH:mm:ss")
+		@NotNull(message = "Closing time is required")
 		private LocalTime closeTime;
 		
 		@JsonIgnore

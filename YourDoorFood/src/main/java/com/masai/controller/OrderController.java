@@ -23,60 +23,60 @@ import com.masai.service.OrderService;
 
 @RestController
 @RequestMapping("/YourDoorFood")
-public class OrderDetailsController {
+public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	
-	@GetMapping("/orderdetailsByCOD/{loginKey}")
+	@GetMapping("/orders/COD/{loginKey}")
 	public ResponseEntity<OrderDetails> placeOrderHandlerByCOD(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
 		
 		OrderDetails order= orderService.placeOrder(key, "CASH_ON_DELIVERY");
 		return new ResponseEntity<OrderDetails>(order, HttpStatus.ACCEPTED);
 	}
 	
-	@GetMapping("/orderdetailsByPrepaid/{loginKey}")
+	@GetMapping("/orders/prepaid/{loginKey}")
 	public ResponseEntity<OrderDetails> placeOrderHandlerByPrepaid(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
 		
 		OrderDetails order= orderService.placeOrder(key, "PAYMENT_SUCCESS");
 		return new ResponseEntity<OrderDetails>(order, HttpStatus.ACCEPTED);
 	}
 	
-	@DeleteMapping("/orderdetails/{loginKey}/{orderId}")
+	@DeleteMapping("/orders/{loginKey}/{orderId}")
 	public ResponseEntity<String> cancelOrderHandler(@PathVariable("loginKey") String key, @PathVariable("orderId") Integer orderId) throws OrderDetailsException, LoginException, CustomerException{
 		
 		String result= orderService.cancelOrder(key, orderId);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/orderdetailsByCustomer/{loginKey}/{orderId}")
+	@GetMapping("/orders/customer/view_order/{loginKey}/{orderId}")
 	public ResponseEntity<OrderDetails> viewOrderByIdByCustomerHandler(@PathVariable("loginKey") String key, @PathVariable("orderId") Integer orderId) throws OrderDetailsException, CustomerException, LoginException{
 		
 		OrderDetails orderDetails= orderService.viewOrderByIdByCustomer(key, orderId);
 		return new ResponseEntity<OrderDetails>(orderDetails, HttpStatus.OK);
 	}
 	
-	@GetMapping("/orderdetailsByRestaurant/{loginKey}/{orderId}")
+	@GetMapping("/orders/restaurant/view_order/{loginKey}/{orderId}")
 	public ResponseEntity<OrderDetails> viewOrderByIdByRestaurantHandler(@PathVariable("loginKey") String key, @PathVariable("orderId") Integer orderId) throws OrderDetailsException, LoginException, RestaurantException {
 		
 		OrderDetails orderDetails= orderService.viewOrderByIdByRestaurant(key, orderId);
 		return new ResponseEntity<OrderDetails>(orderDetails, HttpStatus.OK);
 	}
 	
-	@GetMapping("/orderdetails/{loginKey}")
+	@GetMapping("/orders/customer/view_all_orders/{loginKey}")
 	public ResponseEntity<List<OrderDetails>> viewAllOrderByCustomerHandler(@PathVariable("loginKey") String key) throws OrderDetailsException, CustomerException, LoginException {
 		
 		List<OrderDetails> orders= orderService.viewAllOrdersByCustomer(key);
 		return new ResponseEntity<List<OrderDetails>>(orders, HttpStatus.ACCEPTED);
 	}
 	
-	@GetMapping("/orderdetails/restaurant/{loginKey}")
+	@GetMapping("/orders/restaurant/view_all_orders/{loginKey}")
 	public ResponseEntity<List<OrderDetails>> viewAllOrderByRestaurantHandler(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, RestaurantException {
 		
 		List<OrderDetails> orders= orderService.viewAllOrdersByRestaurant(key);
 		return new ResponseEntity<List<OrderDetails>>(orders, HttpStatus.ACCEPTED);
 	}
 	
-	@GetMapping("/orderdetails/{loginKey}/{customerId}")
+	@GetMapping("/orders/restaurant/view_all_orders_of_customer_from_our_restaurant/{loginKey}/{customerId}")
 	public ResponseEntity<List<OrderDetails>> viewAllOrderByRestaurantByCustomerIdHandler(@PathVariable("loginKey") String key, @PathVariable("customerId") Integer customerId) throws OrderDetailsException, LoginException, RestaurantException, CustomerException {
 		
 		List<OrderDetails> orders= orderService.viewAllOrdersByRestaurantByCustomerId(key, customerId);
