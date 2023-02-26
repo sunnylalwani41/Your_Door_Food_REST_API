@@ -39,8 +39,6 @@ public class Item {
 		private Category category;
 		
 		@NotNull
-	 	@NotBlank
-	 	@NotEmpty
 		private Integer quantity;
 		
 		@NotNull
