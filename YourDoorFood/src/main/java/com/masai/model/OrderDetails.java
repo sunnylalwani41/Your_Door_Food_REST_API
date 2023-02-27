@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,7 +22,6 @@ import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -43,7 +43,8 @@ public class OrderDetails {
 	
 	private Double totalAmount;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	//@Embedded
+	@ElementCollection
 	private Map<Item, Integer> items = new HashMap<>();
 	
 	@JsonIgnore
