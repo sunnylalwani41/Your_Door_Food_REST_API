@@ -32,8 +32,8 @@ public class FoodCart {
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "foodCart")
 	private Customer customer;
 	
-	//@JsonIgnore
+	
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<Item, Integer> items = new HashMap<>();
+	private Map<Integer, Integer> items = new HashMap<>();
 
 }

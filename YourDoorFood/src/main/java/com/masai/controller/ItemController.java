@@ -29,7 +29,7 @@ public class ItemController {
 	@Autowired
 	private ItemService iItemService;
 
-	@PostMapping("/items/restaurants/{logginKey}")
+	@PostMapping("/items/restaurant/{logginKey}")
 	public ResponseEntity<Item> addItemsHandler(@PathVariable("logginKey") String key,
 			@Valid @RequestBody Item item) throws ItemException, LoginException, RestaurantException
 	{
@@ -39,7 +39,7 @@ public class ItemController {
 	}
 
 	
-	@PutMapping("/items/restaurants/update_item/{logginKey}")
+	@PutMapping("/items/restaurant/update_item/{logginKey}")
 	public ResponseEntity<Item> updateItemsHandler(@PathVariable("logginKey") String key,
 			@Valid @RequestBody Item item) throws ItemException, LoginException, RestaurantException
 	{
@@ -56,7 +56,7 @@ public class ItemController {
 		return new ResponseEntity<>(items, HttpStatus.FOUND);
 	}
 	
-	@PutMapping("/items/restaurants/set_not_available/{logginKey}/{itemId}")
+	@PutMapping("/items/restaurant/set_not_available/{logginKey}/{itemId}")
 	public ResponseEntity<String> setItemNotAvailableHandler(@PathVariable("logginKey") String logginKey, @PathVariable("itemId") Integer itemId) throws ItemException, RestaurantException, LoginException{
 		
 		String result = iItemService.setItemNotAvailable(logginKey, itemId);
@@ -73,7 +73,7 @@ public class ItemController {
 		return new ResponseEntity<>(item, HttpStatus.FOUND);
 	}
 	
-	@GetMapping("/items/same_item_from_nearbyme_restaurants/{loginKey}/{itemName}")
+	@GetMapping("/items/customer/same_item_from_nearbyme_restaurants/{loginKey}/{itemName}")
 	public ResponseEntity<Map<String, Item>> viewItemsOnMyAddressHandler(@PathVariable("loginKey") String loginKey, @PathVariable("itemName") String itemName) throws ItemException, RestaurantException, LoginException, CustomerException
 
 	{

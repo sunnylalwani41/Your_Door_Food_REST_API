@@ -1,5 +1,6 @@
 package com.masai.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,24 @@ public class CategoryServiceImpl implements  CategoryService{
 	private CategoryRepo categoryRepo;
 
 	@Override
-	public List<Item> getItemsByCategoryName(String categoryName) throws CategoryException {
+	public List<Item> getItemsByCategoryName(String categoryName, String pincode) throws CategoryException {
 	    
 	    Category category = categoryRepo.findByCategoryName(categoryName);
 	    if(category == null) throw new CategoryException("No category found as: " + categoryName);
 	    
 	    List<Item> items = category.getItems();
-	    if(items.isEmpty()) throw new CategoryException("No items found in this category");
 	    
-	    return items;
+	    List<Item> filteredItems = new ArrayList<>();
+	    
+	    for(Item i : items) {
+	    	if(i.getRestaurant().getAddress().getPincode().equals(pincode)) {
+	    		filteredItems.add(i);
+	    	}
+	    }
+	    
+	    if(filteredItems.isEmpty()) throw new CategoryException("No items found in this category in your area");
+	    
+	    return filteredItems;
 	}
 
 }

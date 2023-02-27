@@ -64,7 +64,7 @@ public class RestaurantController {
 			
 	}
 	
-	@PostMapping("/restaurants/suggest_item/customers/{loginkey}/{pincode}")
+	@PostMapping("/restaurants/customer/suggest_item/{loginkey}/{pincode}")
 	public ResponseEntity<String> giveSuggestionsAboutItem(@PathVariable("loginkey") String loginkey,@Valid @RequestBody Suggestion suggestion, @PathVariable("pincode") String pincode) throws CustomerException, LoginException, RestaurantException{
 		return new ResponseEntity<>(resService.giveSuggestionAboutItem(loginkey,suggestion,pincode),HttpStatus.ACCEPTED);
 		

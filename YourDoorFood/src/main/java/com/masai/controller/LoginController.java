@@ -27,7 +27,7 @@ public class LoginController {
 	@Autowired
 	private RestaurantLoginService restaurantLoginService;
 	
-	@PostMapping("/customer/login")
+	@PostMapping("/login/customer/login")
 	public ResponseEntity<CurrentUserSession> customerLoginHandler(@RequestBody LoginDTO dto) throws LoginException, CustomerException{
 		
 		CurrentUserSession currentUserSession = customerLoginService.login(dto);
@@ -35,7 +35,7 @@ public class LoginController {
 		return new ResponseEntity<>(currentUserSession, HttpStatus.ACCEPTED);
 	}
 	
-	@PostMapping("/restaurant/login")
+	@PostMapping("/login/restaurant/login")
 	public ResponseEntity<CurrentUserSession> restaurantLoginHandler(@RequestBody LoginDTO dto) throws LoginException, RestaurantException{
 		
 		CurrentUserSession currentUserSession = restaurantLoginService.login(dto);
@@ -43,7 +43,7 @@ public class LoginController {
 		return new ResponseEntity<>(currentUserSession, HttpStatus.ACCEPTED);
 	}
 	
-	@PostMapping("/logout/{key}")
+	@PostMapping("/logout/user/{key}")
 	public ResponseEntity<String> customerLogoutHandler(@PathVariable("key") String key) throws LoginException{
 		
 		String result = customerLoginService.logout(key);

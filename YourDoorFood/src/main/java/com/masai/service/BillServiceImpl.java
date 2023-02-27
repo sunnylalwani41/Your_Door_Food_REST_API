@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ import com.masai.model.Bill;
 import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
 import com.masai.model.DateDTO;
-import com.masai.model.Item;
+import com.masai.model.ItemQuantityDTO;
 import com.masai.model.OrderDetails;
 import com.masai.repository.BillRepo;
 import com.masai.repository.CustomerRepo;
@@ -43,8 +42,8 @@ public class BillServiceImpl implements BillService{
 		bill.setGrandTotal(orderDetails.getTotalAmount() + bill.getDeliveryCost());
 		
 		Integer totalItems = 0;
-		for(Map.Entry<Item, Integer> e : orderDetails.getItems().entrySet()) {
-			totalItems += e.getValue();
+		for(ItemQuantityDTO e : orderDetails.getItems()) {
+			totalItems += e.getOrderedQuantity();
 		}
 		bill.setTotalItems(totalItems);
 		

@@ -22,6 +22,7 @@ import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
 import com.masai.model.FoodCart;
 import com.masai.model.Item;
+import com.masai.model.ItemQuantityDTO;
 import com.masai.model.OrderDetails;
 import com.masai.model.Restaurant;
 import com.masai.model.Status;
@@ -67,58 +68,70 @@ public class OrderServiceImpl implements OrderService{
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		FoodCart foodCart = customer.getFoodCart();
-		
-		Map<Item, Integer> itemsMap = foodCart.getItems();
+
+		Map<Integer, Integer> itemsMap = foodCart.getItems();
 		if(itemsMap.isEmpty()) throw new FoodCartException("Cart is empty");
 		
 		if(customer.getAddress() == null) throw new CustomerException("Please add adress to place order");
 		
-		for(Map.Entry<Item, Integer> entry : itemsMap.entrySet()) {
+		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			
-			if(entry.getKey().getQuantity()<entry.getValue()) {
+			Item itemInCart = itemRepo.findById(entry.getKey()).get();
+			
+			if(itemInCart.getQuantity() < entry.getValue()) {
 				throw new ItemException("Insufficient item quantity to the restaurant");				
 			}
 			
-			if(restaurantService.restaurantStatus(entry.getKey().getRestaurant().getRestaurantId()).equals("Closed")) {
-				throw new RestaurantException(entry.getKey().getRestaurant().getRestaurantName() + " is closed");
+			if(restaurantService.restaurantStatus(itemInCart.getRestaurant().getRestaurantId()).equals("Closed")) {
+				throw new RestaurantException(itemInCart.getRestaurant().getRestaurantName() + " is closed");
 			}
 			
-			if(!entry.getKey().getRestaurant().getAddress().getPincode().equals(customer.getAddress().getPincode())) {
+			if(!itemInCart.getRestaurant().getAddress().getPincode().equals(customer.getAddress().getPincode())) {
 				throw new CustomerException("This item is not deliverable in your area");
 			}
 		}
+
+		List<ItemQuantityDTO> itemsDto = new ArrayList<>();
 		
 		Double sum = 0.0;
-		for(Map.Entry<Item, Integer> entry : itemsMap.entrySet()) {
+		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			
-			Item item= entry.getKey();
+			Item item = itemRepo.findById(entry.getKey()).get();
+
 			item.setQuantity(item.getQuantity() - entry.getValue());
 			sum += item.getCost() * entry.getValue();
+			
+			Restaurant restaurant = item.getRestaurant();
+			restaurant.getCustomers().add(customer.getCustomerID());
+			System.out.println(customer.getCustomerID());
+
 			itemRepo.save(item);
-			Restaurant restaurant = entry.getKey().getRestaurant();
-			restaurant.getCustomers().add(customer);
 			restaurantRepo.save(restaurant);
+			
+			ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost(), item.getRestaurant().getRestaurantName(), item.getRestaurant().getRestaurantId());
+			
+			itemsDto.add(dto);
 		}
-		
+
 		OrderDetails orderDetails= new OrderDetails();
-		orderDetails.setItems(itemsMap);
+		orderDetails.setItems(itemsDto);
 		orderDetails.setOrderDate(LocalDateTime.now());
 		orderDetails.setPaymentStatus(Status.valueOf(paymentType));
 		orderDetails.setTotalAmount(sum);
-		
-		foodCart.setItems(new HashMap<Item, Integer>());
-		foodCartRepo.save(foodCart);
-		
+
 		Bill bill = billService.genrateBill(orderDetails);
-		
+
 		orderDetails.setBill(bill);;
+		
+		foodCart.setItems(new HashMap<Integer, Integer>());
+		foodCartRepo.save(foodCart);
 		
 		orderDetails.setCustomer(customer);
 		orderDetails = orderDetailsRepo.save(orderDetails);
-		
+
 		customer.getOrders().add(orderDetails);
 		customerRepo.save(customer);
-		
+
 		return orderDetails;
 		
 	}
@@ -140,16 +153,23 @@ public class OrderServiceImpl implements OrderService{
 			throw new OrderDetailsException("Order can not be cancelled, time limit exceeded for cancellation");
 		}
 		
-		Map<Item, Integer> itemsMap = orderDetails.getItems();
+		List<ItemQuantityDTO> itemsDto = orderDetails.getItems();
 		
-		for(Map.Entry<Item, Integer> entry : itemsMap.entrySet()) {
+		System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyy");
+		
+//		billRepo.delete(orderDetails.getBill());
+		
+		orderDetailsRepo.delete(orderDetails);
+		
+		System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+		
+		for(ItemQuantityDTO i : itemsDto) {
 			
-			Item item=entry.getKey();
-			item.setQuantity(item.getQuantity() + entry.getValue());
+			Item item = itemRepo.findById(i.getItemId()).get();
+			item.setQuantity(item.getQuantity() + i.getOrderedQuantity());
 			itemRepo.save(item);
 		}
 		
-		orderDetailsRepo.delete(orderDetails);
 		return "Order cancelled successfully";
 		
 	}
@@ -176,7 +196,12 @@ public class OrderServiceImpl implements OrderService{
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
-		Set<Customer> customers = restaurant.getCustomers();
+		Set<Integer> customersIds = restaurant.getCustomers();
+		
+		List<Customer> customers = new ArrayList<>();
+		for(Integer i : customersIds) {
+			customers.add(customerRepo.findById(i).get());
+		}
 		
 		for(Customer c : customers) {
 			List<OrderDetails> temp = c.getOrders();
@@ -185,20 +210,20 @@ public class OrderServiceImpl implements OrderService{
 				if(o.getOrderId() == orderId) {
 					Double sum = 0.0;
 					
-					Map<Item, Integer> itemsMap = o.getItems();
+					List<ItemQuantityDTO> itemsDto = o.getItems();
 					
-					Map<Item, Integer> restaurantOrderDetailsMap= new HashMap<>();
+					List<ItemQuantityDTO> restaurantOrderDetails = new ArrayList<>();
 					
-					for(Map.Entry<Item, Integer> m: itemsMap.entrySet()) {
-						if(m.getKey().getRestaurant().getRestaurantId()==restaurant.getRestaurantId()) {
-							restaurantOrderDetailsMap.put(m.getKey(), m.getValue());
-							sum += m.getKey().getCost() * m.getValue();
+					for(ItemQuantityDTO dto: itemsDto) {
+						if(dto.getRestaurantId() == restaurant.getRestaurantId()) {
+							restaurantOrderDetails.add(dto);
+							sum += dto.getCost() * dto.getOrderedQuantity();
 						}
 					}
 					
-					if(restaurantOrderDetailsMap.isEmpty()) throw new OrderDetailsException("Please enter valid order id");
+					if(restaurantOrderDetails.isEmpty()) throw new OrderDetailsException("Please enter valid order id");
 					o.setTotalAmount(sum);
-					o.setItems(restaurantOrderDetailsMap);
+					o.setItems(restaurantOrderDetails);
 					return o;
 				}
 				
@@ -216,10 +241,15 @@ public class OrderServiceImpl implements OrderService{
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
-		Set<Customer> customers = restaurant.getCustomers();
+		Set<Integer> customersIds = restaurant.getCustomers();
+		
+		List<Customer> customers = new ArrayList<>();
+		for(Integer i : customersIds) {
+			customers.add(customerRepo.findById(i).get());
+		}
 		
 		List<OrderDetails> orders = new ArrayList<>();
-		
+		System.out.println(customers.size());
 		for(Customer c: customers) {
 			List<OrderDetails> temp = c.getOrders();
 			
@@ -227,18 +257,18 @@ public class OrderServiceImpl implements OrderService{
 				
 				Double sum = 0.0;
 				
-				Map<Item, Integer> itemsMap= o.getItems();
+				List<ItemQuantityDTO> itemsDto = o.getItems();
 				
-				Map<Item, Integer> restaurantOrderDetailsMap= new HashMap<>();
+				List<ItemQuantityDTO> restaurantOrderDetails = new ArrayList<>();
 				
-				for(Map.Entry<Item, Integer> m: itemsMap.entrySet()) {
-					if(m.getKey().getRestaurant().getRestaurantId()==restaurant.getRestaurantId()) {
-						restaurantOrderDetailsMap.put(m.getKey(), m.getValue());
-						sum += m.getKey().getCost() * m.getValue();
+				for(ItemQuantityDTO dto: itemsDto) {
+					if(dto.getRestaurantId() == restaurant.getRestaurantId()) {
+						restaurantOrderDetails.add(dto);
+						sum += dto.getCost() * dto.getOrderedQuantity();
 					}
 				}
 				o.setTotalAmount(sum);
-				o.setItems(restaurantOrderDetailsMap);
+				o.setItems(restaurantOrderDetails);
 				orders.add(o);
 			}
 		}
@@ -271,7 +301,13 @@ public class OrderServiceImpl implements OrderService{
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
-		Set<Customer> customers= restaurant.getCustomers();
+		Set<Integer> customersIds = restaurant.getCustomers();
+		
+		List<Customer> customers = new ArrayList<>();
+		for(Integer i : customersIds) {
+			customers.add(customerRepo.findById(i).get());
+		}
+
 		Customer customer= null;
 		for(Customer c: customers) {
 			if(c.getCustomerID()==customerId) {
@@ -288,18 +324,18 @@ public class OrderServiceImpl implements OrderService{
 			
 			Double sum = 0.0;
 			
-			Map<Item, Integer> itemsMap= o.getItems();
+			List<ItemQuantityDTO> itemsDto = o.getItems();
 			
-			Map<Item, Integer> restaurantOrderDetailsMap= new HashMap<>();
+			List<ItemQuantityDTO> restaurantOrderDetails = new ArrayList<>();
 			
-			for(Map.Entry<Item, Integer> m: itemsMap.entrySet()) {
-				if(m.getKey().getRestaurant().getRestaurantId()==restaurant.getRestaurantId()) {
-					restaurantOrderDetailsMap.put(m.getKey(), m.getValue());
-					sum+=m.getKey().getCost()*m.getValue();
+			for(ItemQuantityDTO dto: itemsDto) {
+				if(dto.getRestaurantId() == restaurant.getRestaurantId()) {
+					restaurantOrderDetails.add(dto);
+					sum += dto.getCost() * dto.getOrderedQuantity();
 				}
 			}
 			o.setTotalAmount(sum);
-			o.setItems(restaurantOrderDetailsMap);
+			o.setItems(restaurantOrderDetails);
 			orders.add(o);
 			
 		}

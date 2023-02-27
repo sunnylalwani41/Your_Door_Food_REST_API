@@ -27,21 +27,21 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	
-	@GetMapping("/orders/COD/{loginKey}")
+	@GetMapping("/orders/customer/COD/place_order/{loginKey}")
 	public ResponseEntity<OrderDetails> placeOrderHandlerByCOD(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
 		
 		OrderDetails order= orderService.placeOrder(key, "CASH_ON_DELIVERY");
 		return new ResponseEntity<OrderDetails>(order, HttpStatus.ACCEPTED);
 	}
 	
-	@GetMapping("/orders/prepaid/{loginKey}")
+	@GetMapping("/orders/customer/prepaid/place_order/{loginKey}")
 	public ResponseEntity<OrderDetails> placeOrderHandlerByPrepaid(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
 		
 		OrderDetails order= orderService.placeOrder(key, "PAYMENT_SUCCESS");
 		return new ResponseEntity<OrderDetails>(order, HttpStatus.ACCEPTED);
 	}
 	
-	@DeleteMapping("/orders/{loginKey}/{orderId}")
+	@DeleteMapping("/orders/customer/cancel_order/{loginKey}/{orderId}")
 	public ResponseEntity<String> cancelOrderHandler(@PathVariable("loginKey") String key, @PathVariable("orderId") Integer orderId) throws OrderDetailsException, LoginException, CustomerException{
 		
 		String result= orderService.cancelOrder(key, orderId);

@@ -7,6 +7,6 @@ import com.masai.model.Item;
 
 public interface CategoryService {
 	
-	public List<Item> getItemsByCategoryName(String categoryName) throws CategoryException;
+	public List<Item> getItemsByCategoryName(String categoryName, String pincode) throws CategoryException;
 	
 }

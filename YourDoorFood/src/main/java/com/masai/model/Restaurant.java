@@ -72,9 +72,8 @@ public class Restaurant {
 		private String mobileNumber;
 		
 		@JsonIgnore
-		@Embedded
 		@ElementCollection
-		private Set<Customer> customers= new HashSet<>();
+		private Set<Integer> customers = new HashSet<>();
 		
 		@JsonFormat(pattern = "HH:mm:ss")
 		@NotNull(message = "Opening time is required")

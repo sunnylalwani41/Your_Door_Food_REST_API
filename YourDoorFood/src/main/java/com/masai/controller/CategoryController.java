@@ -21,9 +21,9 @@ public class CategoryController {
 	@Autowired
 	private CategoryService iCategoryService;
 	
-	@GetMapping("/categories/{cateName}")
-	public ResponseEntity<List<Item>> getItemsByCategoryName(@PathVariable("cateName") String categoryName) throws CategoryException {
-		return new ResponseEntity<>(iCategoryService.getItemsByCategoryName(categoryName),HttpStatus.FOUND);
+	@GetMapping("/categories/view_all_items/{cateName}/{pincode}")
+	public ResponseEntity<List<Item>> getItemsByCategoryName(@PathVariable("cateName") String categoryName, @PathVariable("pincode") String pincode) throws CategoryException {
+		return new ResponseEntity<>(iCategoryService.getItemsByCategoryName(categoryName, pincode),HttpStatus.FOUND);
 		
 	}
 	

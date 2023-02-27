@@ -38,9 +38,9 @@ public class DeliveryServiceImpl implements DeliveryService{
 		
 		if(currentUserSession.getId() != orderDetails.getCustomer().getCustomerID()) throw new OrderDetailsException("No order found with this order id: "+orderId);
 		
-		LocalDateTime deliverTime = orderDetails.getOrderDate().plusMinutes(5);
+		LocalDateTime deliverTime = orderDetails.getOrderDate().plusMinutes(20);
 		
-		if(LocalDateTime.now().isBefore(deliverTime)) {
+		if(LocalDateTime.now().isAfter(deliverTime)) {
 			return "Your order was delivered on time";
 		}
 		

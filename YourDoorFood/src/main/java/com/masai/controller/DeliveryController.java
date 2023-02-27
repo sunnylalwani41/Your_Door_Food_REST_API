@@ -20,7 +20,7 @@ public class DeliveryController {
 	@Autowired
 	private DeliveryService deliveryService;
 	
-	@GetMapping("/customers/delivery/{key}/{orderId}")
+	@GetMapping("/delivery/customer/{key}/{orderId}")
 	public ResponseEntity<String> orderDeliveryHandler(@PathVariable("key") String key, @PathVariable("orderId") Integer orderId) throws DeliveryException, LoginException, OrderDetailsException{
 		
 		String result = deliveryService.getOrderDetails(key, orderId);

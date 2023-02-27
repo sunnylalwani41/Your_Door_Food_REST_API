@@ -1,8 +1,8 @@
 package com.masai.model;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -12,7 +12,6 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +34,8 @@ public class OrderDetails {
 	
 	private LocalDateTime orderDate;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@JsonIgnore
+	@ManyToOne
 	private Customer customer;
 	
 	@Enumerated(EnumType.STRING)
@@ -43,9 +43,9 @@ public class OrderDetails {
 	
 	private Double totalAmount;
 
-	//@Embedded
+	@Embedded
 	@ElementCollection
-	private Map<Item, Integer> items = new HashMap<>();
+	private List<ItemQuantityDTO> items = new ArrayList<>();
 	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "orderDetails")

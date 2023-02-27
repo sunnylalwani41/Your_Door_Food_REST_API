@@ -1,6 +1,7 @@
 package com.masai.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +17,11 @@ import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
 import com.masai.model.FoodCart;
 import com.masai.model.Item;
+import com.masai.model.ItemQuantityDTO;
 import com.masai.model.Restaurant;
 import com.masai.repository.CustomerRepo;
 import com.masai.repository.FoodCartRepo;
+import com.masai.repository.ItemRepo;
 import com.masai.repository.RestaurantRepo;
 import com.masai.repository.SessionRepo;
 
@@ -35,6 +38,9 @@ public class FoodCartServiceImpl implements FoodCartService{
 	
 	@Autowired
 	private RestaurantRepo restaurantRepo;
+	
+	@Autowired
+	private ItemRepo itemRepo;
 	
 	@Override
 	public FoodCart addItemToCart(String key, String itemName, Integer restaurantId) throws FoodCartException, LoginException, ItemException, RestaurantException, CustomerException{
@@ -57,15 +63,17 @@ public class FoodCartServiceImpl implements FoodCartService{
 		
 		FoodCart foodCart= customer.getFoodCart();
 		
-		Map<Item, Integer> itemsMap = foodCart.getItems();
+		Map<Integer, Integer> itemsMap = foodCart.getItems();
+		
+		Integer itemId = item.getItemId();
 		
 		if(item.getQuantity()>0) {
 			
-			if(itemsMap.containsKey(item)) {
-				itemsMap.put(item, itemsMap.get(item)+1);
+			if(itemsMap.containsKey(itemId)) {
+				itemsMap.put(itemId, itemsMap.get(itemId)+1);
 			}
 			else {
-				itemsMap.put(item, 1);
+				itemsMap.put(itemId, 1);
 			}
 		}
 		else {
@@ -92,19 +100,22 @@ public class FoodCartServiceImpl implements FoodCartService{
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		FoodCart foodCart = customer.getFoodCart();
-		Map<Item, Integer> itemsMap = foodCart.getItems();
+		Map<Integer, Integer> itemsMap = foodCart.getItems();
 		Item item= null;
 		
-		for(Map.Entry<Item, Integer> entry : itemsMap.entrySet()) {
-			if(entry.getKey().getItemName().equals(itemName)) {
-				item= entry.getKey();
+		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
+			Item itemInCart = itemRepo.findById(entry.getKey()).get();
+			if(itemInCart.getItemName().equals(itemName)) {
+				item = itemInCart;
 				break;
 			}
 		}
 		
 		if(item == null) throw new FoodCartException("Item is not available in the cart, please add the item first");
 		
-		if(item.getQuantity() >= (quantity + itemsMap.get(item)))  itemsMap.put(item, itemsMap.get(item) + quantity);
+		Integer itemId = item.getItemId();
+		
+		if(item.getQuantity() >= (quantity + itemsMap.get(itemId)))  itemsMap.put(itemId, itemsMap.get(itemId) + quantity);
 		else throw new ItemException("Insufficient item quantity");
 		
 //		foodCart.setItems(itemsMap);
@@ -123,25 +134,28 @@ public class FoodCartServiceImpl implements FoodCartService{
 		
 		FoodCart foodCart = customer.getFoodCart();
 		
-		Map<Item, Integer> itemsMap = foodCart.getItems();
+		Map<Integer, Integer> itemsMap = foodCart.getItems();
 		Item item = null;
-		for(Map.Entry<Item, Integer> entry : itemsMap.entrySet()) {
-			if(entry.getKey().getItemName().equals(itemName)) {
-				item = entry.getKey();
+		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
+			Item itemInCart = itemRepo.findById(entry.getKey()).get();
+			if(itemInCart.getItemName().equals(itemName)) {
+				item = itemInCart;
 				break;
 			}
 		}
 		if(item==null) throw new FoodCartException("Item is not available in the cart, please add the item first");
-				
+		
+		Integer itemId = item.getItemId();
+		
 		if(item.getQuantity() == 0) {
-			itemsMap.remove(item);
+			itemsMap.remove(itemId);
 			cartRepo.save(foodCart);
 			throw new ItemException("Item is already out of stock");
 		}
 		
-		if(quantity < itemsMap.get(item)) itemsMap.put(item, itemsMap.get(item) - quantity);
+		if(quantity < itemsMap.get(itemId)) itemsMap.put(itemId, itemsMap.get(itemId) - quantity);
 		else {
-			itemsMap.remove(item);
+			itemsMap.remove(itemId);
 			cartRepo.save(foodCart);
 			throw new ItemException(item.getItemName()+ " is removed from the cart");
 		}
@@ -158,17 +172,20 @@ public class FoodCartServiceImpl implements FoodCartService{
 		
 		FoodCart foodCart= customer.getFoodCart();
 		
-		Map<Item, Integer> itmesMap = foodCart.getItems();
+		Map<Integer, Integer> itemsMap = foodCart.getItems();
 		Item item = null;
-		for(Map.Entry<Item, Integer> entry : itmesMap.entrySet()) {
-			if(entry.getKey().getItemName().equals(itemName)) {
-				item = entry.getKey();
+		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
+			Item itemInCart = itemRepo.findById(entry.getKey()).get();
+			if(itemInCart.getItemName().equals(itemName)) {
+				item = itemInCart;
 				break;
 			}
 		}
 		if(item == null) throw new FoodCartException("Item is not available in the cart.");
-			
-		itmesMap.remove(item);
+		
+		Integer itemId = item.getItemId();
+		
+		itemsMap.remove(itemId);
 		
 		return cartRepo.save(foodCart);
 	}
@@ -182,7 +199,7 @@ public class FoodCartServiceImpl implements FoodCartService{
 		
 		FoodCart foodCart = customer.getFoodCart();
 		
-		Map<Item, Integer> itemsMap = foodCart.getItems();
+		Map<Integer, Integer> itemsMap = foodCart.getItems();
 		
 		if(itemsMap.size()==0) throw new FoodCartException("Cart already empty");
 		
@@ -192,7 +209,7 @@ public class FoodCartServiceImpl implements FoodCartService{
 	}
 
 	@Override
-	public Map<Item, Integer> viewCart(String key) throws LoginException, CustomerException, FoodCartException {
+	public List<ItemQuantityDTO> viewCart(String key) throws LoginException, CustomerException, FoodCartException {
 
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
@@ -200,7 +217,17 @@ public class FoodCartServiceImpl implements FoodCartService{
 		
 		if(customer.getFoodCart().getItems().isEmpty()) throw new FoodCartException("Food cart is Empty");
 		
-		return customer.getFoodCart().getItems();
+		Map<Integer, Integer> itemsMap = customer.getFoodCart().getItems();
+		
+		List<ItemQuantityDTO> items = new ArrayList<>();
+		
+		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
+			Item item = itemRepo.findById(entry.getKey()).get();
+			ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost(), item.getRestaurant().getRestaurantName(), item.getRestaurant().getRestaurantId());
+			items.add(dto);
+		}
+		
+		return items;
 	}
 
 }
