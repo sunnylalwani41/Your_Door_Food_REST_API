@@ -76,7 +76,7 @@ public class Customer {
 	private Address address;
 	
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
 	private List<OrderDetails> orders = new ArrayList<>();
 
 }

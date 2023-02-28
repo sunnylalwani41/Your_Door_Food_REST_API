@@ -102,15 +102,17 @@ public class OrderServiceImpl implements OrderService{
 			sum += item.getCost() * entry.getValue();
 			
 			Restaurant restaurant = item.getRestaurant();
-			restaurant.getCustomers().add(customer.getCustomerID());
-			System.out.println(customer.getCustomerID());
+			
 
 			itemRepo.save(item);
-			restaurantRepo.save(restaurant);
+			
 			
 			ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost(), item.getRestaurant().getRestaurantName(), item.getRestaurant().getRestaurantId());
 			
 			itemsDto.add(dto);
+			
+			restaurant.getCustomers().add(customer.getCustomerID());
+			restaurantRepo.save(restaurant);
 		}
 
 		OrderDetails orderDetails= new OrderDetails();
@@ -132,6 +134,32 @@ public class OrderServiceImpl implements OrderService{
 		customer.getOrders().add(orderDetails);
 		customerRepo.save(customer);
 
+//		Map<Integer, RestaurantOrders> mapForRestaurantOrders = new HashMap<>();
+//			
+//		for(ItemQuantityDTO i : orderDetails.getItems()) {
+//			Integer restaurantId = i.getRestaurantId();
+//			
+//			Restaurant restaurant = restaurantRepo.findById(restaurantId).get();			
+//			if(mapForRestaurantOrders.containsKey(restaurantId)){
+//				RestaurantOrders restaurantOrder = mapForRestaurantOrders.get(restaurantId);
+//				restaurantOrder.getItems().add(i);
+//				restaurantOrder.setTotalCost(restaurantOrder.getTotalCost() + (i.getCost() * i.getOrderedQuantity()));
+//				
+//				restaurant.getRestaurantOrders().add(restaurantOrder);
+//			}else {
+//				RestaurantOrders restaurantOrder = new RestaurantOrders();
+//				restaurantOrder.setOrderId(orderDetails.getOrderId());
+//				restaurantOrder.setRestaurantId(restaurantId);
+//				restaurantOrder.setTotalCost(i.getCost() * i.getOrderedQuantity());
+//				restaurantOrder.getItems().add(i);
+//				
+//				mapForRestaurantOrders.put(restaurantId, restaurantOrder);
+//				restaurant.getRestaurantOrders().add(restaurantOrder);
+//			}
+//			
+//			restaurantRepo.save(restaurant);
+//		}
+		
 		return orderDetails;
 		
 	}
@@ -154,14 +182,12 @@ public class OrderServiceImpl implements OrderService{
 		}
 		
 		List<ItemQuantityDTO> itemsDto = orderDetails.getItems();
-		
-		System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyy");
-		
-//		billRepo.delete(orderDetails.getBill());
-		
+
+		System.out.println(orderDetails.getOrderId());
+		System.out.println(itemsDto);
 		orderDetailsRepo.delete(orderDetails);
 		
-		System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+		System.out.println(itemsDto);
 		
 		for(ItemQuantityDTO i : itemsDto) {
 			
@@ -193,7 +219,7 @@ public class OrderServiceImpl implements OrderService{
 	public OrderDetails viewOrderByIdByRestaurant(String key, Integer orderId) throws OrderDetailsException, RestaurantException, LoginException{
 
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view your order");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
 		Set<Integer> customersIds = restaurant.getCustomers();
@@ -207,9 +233,10 @@ public class OrderServiceImpl implements OrderService{
 			List<OrderDetails> temp = c.getOrders();
 			
 			for(OrderDetails o : temp) {
-				if(o.getOrderId() == orderId) {
+
+				if(o.getOrderId().equals(orderId)) {
 					Double sum = 0.0;
-					
+
 					List<ItemQuantityDTO> itemsDto = o.getItems();
 					
 					List<ItemQuantityDTO> restaurantOrderDetails = new ArrayList<>();
@@ -220,7 +247,7 @@ public class OrderServiceImpl implements OrderService{
 							sum += dto.getCost() * dto.getOrderedQuantity();
 						}
 					}
-					
+
 					if(restaurantOrderDetails.isEmpty()) throw new OrderDetailsException("Please enter valid order id");
 					o.setTotalAmount(sum);
 					o.setItems(restaurantOrderDetails);
@@ -229,7 +256,7 @@ public class OrderServiceImpl implements OrderService{
 				
 			}
 		}
-		
+
 		throw new OrderDetailsException("Please enter valid order id");
 		
 	}
