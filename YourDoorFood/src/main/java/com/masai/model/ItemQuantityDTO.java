@@ -14,7 +14,5 @@ public class ItemQuantityDTO {
 	private Integer orderedQuantity;
 	private String category;
 	private Double cost;
-	private String restaurantName;
-	private Integer restaurantId;
 	
 }

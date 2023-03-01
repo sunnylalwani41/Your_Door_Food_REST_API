@@ -16,7 +16,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
@@ -35,9 +34,9 @@ public class OrderDetails {
 	
 	private LocalDateTime orderDate;
 	
-	@JsonIgnore
-	@ManyToOne
-	private Customer customer;
+	private Integer customerId;
+	
+	private Integer restaurantId;
 	
 	@Enumerated(EnumType.STRING)
 	private Status paymentStatus;

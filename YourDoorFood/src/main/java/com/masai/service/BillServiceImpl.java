@@ -19,6 +19,7 @@ import com.masai.model.ItemQuantityDTO;
 import com.masai.model.OrderDetails;
 import com.masai.repository.BillRepo;
 import com.masai.repository.CustomerRepo;
+import com.masai.repository.OrderDetailsRepo;
 import com.masai.repository.SessionRepo;
 
 @Service
@@ -32,6 +33,9 @@ public class BillServiceImpl implements BillService{
 	
 	@Autowired
 	private CustomerRepo customerRepo;
+	
+	@Autowired
+	private OrderDetailsRepo orderDetailsRepo;
 
 	@Override
 	public Bill genrateBill(OrderDetails orderDetails) throws BillException {
@@ -58,7 +62,8 @@ public class BillServiceImpl implements BillService{
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		Bill bill = billRepo.findById(billId).orElseThrow(() -> new BillException("Bill not found"));
-		if (bill.getOrderDetails().getCustomer().getCustomerID() != customer.getCustomerID()) throw new BillException("Bill not found");
+		
+		if (bill.getOrderDetails().getCustomerId() != customer.getCustomerID()) throw new BillException("Bill not found");
 		
 		return bill;
 	}
@@ -68,12 +73,12 @@ public class BillServiceImpl implements BillService{
 		LocalDate startDate= dateDTO.getStartDate();
 		LocalDate endDate= dateDTO.getEndDate();
 		
-		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
-		List<OrderDetails> orderDetails = customer.getOrders();
+		List<OrderDetails> orderDetails = orderDetailsRepo.findByCustomerId(customer.getCustomerID());
+		
 		if(orderDetails.isEmpty()) throw new BillException("No bills found");
 		
 		List<OrderDetails> filteredOrders = new ArrayList<>();
@@ -101,7 +106,7 @@ public class BillServiceImpl implements BillService{
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
-		List<OrderDetails> orderDetails = customer.getOrders();
+		List<OrderDetails> orderDetails = orderDetailsRepo.findByCustomerId(customer.getCustomerID());
 		if(orderDetails.isEmpty()) throw new BillException("No bills found");
 		
 		List<Bill> bills = new ArrayList<>();
@@ -120,7 +125,7 @@ public class BillServiceImpl implements BillService{
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		Bill bill = billRepo.findById(billId).orElseThrow(() -> new BillException("Bill not found"));
-		if (bill.getOrderDetails().getCustomer().getCustomerID() != customer.getCustomerID()) throw new BillException("Bill not found");
+		if (bill.getOrderDetails().getCustomerId() != customer.getCustomerID()) throw new BillException("Bill not found");
 		
 		return bill.getGrandTotal();
 	}

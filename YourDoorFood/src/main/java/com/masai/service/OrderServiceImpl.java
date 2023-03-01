@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService{
 	private RestaurantService restaurantService;
 	
 	@Override
-	public OrderDetails placeOrder(String key, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException {
+	public List<OrderDetails> placeOrder(String key, String paymentType) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
@@ -71,8 +71,6 @@ public class OrderServiceImpl implements OrderService{
 
 		Map<Integer, Integer> itemsMap = foodCart.getItems();
 		if(itemsMap.isEmpty()) throw new FoodCartException("Cart is empty");
-		
-		if(customer.getAddress() == null) throw new CustomerException("Please add adress to place order");
 		
 		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			
@@ -90,77 +88,58 @@ public class OrderServiceImpl implements OrderService{
 				throw new CustomerException("This item is not deliverable in your area");
 			}
 		}
-
+		
 		List<ItemQuantityDTO> itemsDto = new ArrayList<>();
+		
+		Map<Integer, OrderDetails> restaurantOrderMap = new HashMap<>();
 		
 		Double sum = 0.0;
 		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			
 			Item item = itemRepo.findById(entry.getKey()).get();
-
-			item.setQuantity(item.getQuantity() - entry.getValue());
-			sum += item.getCost() * entry.getValue();
 			
-			Restaurant restaurant = item.getRestaurant();
+			Integer restaurantId = item.getRestaurant().getRestaurantId();
 			
-
-			itemRepo.save(item);
-			
-			
-			ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost(), item.getRestaurant().getRestaurantName(), item.getRestaurant().getRestaurantId());
-			
-			itemsDto.add(dto);
-			
-			restaurant.getCustomers().add(customer.getCustomerID());
-			restaurantRepo.save(restaurant);
+			if(restaurantOrderMap.containsKey(restaurantId)) {
+				
+				ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost());
+				
+				OrderDetails orderDetails = restaurantOrderMap.get(restaurantId);
+				orderDetails.setTotalAmount(orderDetails.getTotalAmount() + item.getCost() * entry.getValue());
+				orderDetails.getItems().add(dto);
+				
+				restaurantOrderMap.put(restaurantId, orderDetails);
+				
+			}else {
+				
+				ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost());
+				
+				OrderDetails orderDetails = new OrderDetails();
+				orderDetails.setOrderDate(LocalDateTime.now());
+				orderDetails.setCustomerId(customer.getCustomerID());
+				orderDetails.setRestaurantId(restaurantId);
+				orderDetails.setPaymentStatus(Status.valueOf(paymentType));
+				orderDetails.setTotalAmount(item.getCost() * entry.getValue());
+				orderDetails.getItems().add(dto);
+				
+				restaurantOrderMap.put(restaurantId, orderDetails);
+			}
 		}
-
-		OrderDetails orderDetails= new OrderDetails();
-		orderDetails.setItems(itemsDto);
-		orderDetails.setOrderDate(LocalDateTime.now());
-		orderDetails.setPaymentStatus(Status.valueOf(paymentType));
-		orderDetails.setTotalAmount(sum);
-
-		Bill bill = billService.genrateBill(orderDetails);
-
-		orderDetails.setBill(bill);;
 		
-		foodCart.setItems(new HashMap<Integer, Integer>());
-		foodCartRepo.save(foodCart);
+		List<OrderDetails> orderDetailsList = new ArrayList<>();
 		
-		orderDetails.setCustomer(customer);
-		orderDetails = orderDetailsRepo.save(orderDetails);
-
-		customer.getOrders().add(orderDetails);
-		customerRepo.save(customer);
-
-//		Map<Integer, RestaurantOrders> mapForRestaurantOrders = new HashMap<>();
-//			
-//		for(ItemQuantityDTO i : orderDetails.getItems()) {
-//			Integer restaurantId = i.getRestaurantId();
-//			
-//			Restaurant restaurant = restaurantRepo.findById(restaurantId).get();			
-//			if(mapForRestaurantOrders.containsKey(restaurantId)){
-//				RestaurantOrders restaurantOrder = mapForRestaurantOrders.get(restaurantId);
-//				restaurantOrder.getItems().add(i);
-//				restaurantOrder.setTotalCost(restaurantOrder.getTotalCost() + (i.getCost() * i.getOrderedQuantity()));
-//				
-//				restaurant.getRestaurantOrders().add(restaurantOrder);
-//			}else {
-//				RestaurantOrders restaurantOrder = new RestaurantOrders();
-//				restaurantOrder.setOrderId(orderDetails.getOrderId());
-//				restaurantOrder.setRestaurantId(restaurantId);
-//				restaurantOrder.setTotalCost(i.getCost() * i.getOrderedQuantity());
-//				restaurantOrder.getItems().add(i);
-//				
-//				mapForRestaurantOrders.put(restaurantId, restaurantOrder);
-//				restaurant.getRestaurantOrders().add(restaurantOrder);
-//			}
-//			
-//			restaurantRepo.save(restaurant);
-//		}
+		for(Map.Entry<Integer, OrderDetails> restaurantOrder : restaurantOrderMap.entrySet()) {
+			
+			OrderDetails orderDetails = restaurantOrder.getValue();
+			
+			Bill bill =  billService.genrateBill(orderDetails);
+			orderDetails.setBill(bill);
+			
+			orderDetails = orderDetailsRepo.save(orderDetails);
+			orderDetailsList.add(orderDetails);
+		}
 		
-		return orderDetails;
+		return orderDetailsList;
 		
 	}
 	
