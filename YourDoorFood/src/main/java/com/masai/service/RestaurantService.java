@@ -5,6 +5,7 @@ import java.util.List;
 import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
+import com.masai.model.ResetPasswordDTO;
 import com.masai.model.Restaurant;
 import com.masai.model.Suggestion;
 
@@ -26,6 +27,6 @@ public interface RestaurantService {
 	
 	public List<Suggestion> viewSuggestions(String key) throws LoginException, RestaurantException;
 
-	public String updatepassword(String key, String currentPassword, String newPassword) throws RestaurantException, LoginException;
+	public String updatepassword(String key, ResetPasswordDTO resetPasswordDTO) throws RestaurantException, LoginException;
 	
 }

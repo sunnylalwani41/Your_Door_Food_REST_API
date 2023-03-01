@@ -28,15 +28,15 @@ public class DeliveryServiceImpl implements DeliveryService{
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		
-		if(currentUserSession==null) throw new LoginException("Please login to get your order details...");
+		if(currentUserSession==null) throw new LoginException("Please login to get your order delivery status");
 		
 		Optional<OrderDetails> orderDetailsOpt = orderDetailsRepo.findById(orderId);
 		
-		if(orderDetailsOpt.isEmpty()) throw new OrderDetailsException("No order found...");
+		if(orderDetailsOpt.isEmpty()) throw new OrderDetailsException("Order not found with this order id: "+orderId);
 		
 		OrderDetails orderDetails = orderDetailsOpt.get();
 		
-		if(currentUserSession.getId() != orderDetails.getCustomerId()) throw new OrderDetailsException("No order found with this order id: "+orderId);
+		if(currentUserSession.getId() != orderDetails.getCustomerId()) throw new OrderDetailsException("Order not found with this order id: "+orderId);
 		
 		LocalDateTime deliverTime = orderDetails.getOrderDate().plusMinutes(20);
 		

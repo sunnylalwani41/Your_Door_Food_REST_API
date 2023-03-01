@@ -29,20 +29,20 @@ public class RestaurantLoginServiceImpl implements RestaurantLoginService{
 	@Override
 	public CurrentUserSession login(LoginDTO dto) throws LoginException, RestaurantException {
 		
+		Restaurant restaurant = restaurantRepo.findByMobileNumber(dto.getMobileNumber());
+		
+		if(restaurant==null) throw new RestaurantException("Please enter a valid mobile number");
+		
+		Optional<CurrentUserSession> currentUserSession = sessionRepo.findById(restaurant.getRestaurantId());
+		
+		if(currentUserSession.isPresent()) throw new LoginException("User already logged in with this mobile number");
+		
 		List<CurrentUserSession> list = sessionRepo.findAll();
 		for(CurrentUserSession c : list) {
 			sessionRepo.delete(c);
 		}
 		
-		Restaurant restaurant = restaurantRepo.findByMobileNumber(dto.getMobileNumber());
-		
-		if(restaurant==null) throw new RestaurantException("Please enter a valid mobile number!");
-		
-		Optional<CurrentUserSession> currentUserSession = sessionRepo.findById(restaurant.getRestaurantId());
-		
-		if(currentUserSession.isPresent()) throw new LoginException("User already logged in with this mobile number!");
-		
-		if(!restaurant.getPassword().equals(dto.getPassword())) throw new LoginException("Incorrect password!");
+		if(!restaurant.getPassword().equals(dto.getPassword())) throw new LoginException("Incorrect password");
 
 		String key = RandomString.make(6);
 		
@@ -58,11 +58,11 @@ public class RestaurantLoginServiceImpl implements RestaurantLoginService{
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		
-		if(currentUserSession==null) throw new LoginException("Invalid User key!");
+		if(currentUserSession==null) throw new LoginException("Invalid User key");
 		
 		sessionRepo.delete(currentUserSession);
 		
-		return "Logged out successfully...";
+		return "Logged out successfully";
 	}
 
 }

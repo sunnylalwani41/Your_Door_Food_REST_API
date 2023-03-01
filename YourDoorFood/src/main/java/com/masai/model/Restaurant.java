@@ -52,9 +52,9 @@ public class Restaurant {
 		private String email;
 		
 		@JsonProperty(access = Access.WRITE_ONLY)
-		@NotNull(message = "Password is null")
-		@NotBlank(message = "blank")
-		@NotEmpty(message = "empty")
+		@NotNull(message = "Password can not be null")
+		@NotBlank(message = "Password can not be blank")
+		@NotEmpty(message = "Password can not be empty")
 		@Size(min = 8, max = 15, message = "Password length should be 8 to 15")
 		private String password;
 		

@@ -21,7 +21,8 @@ public class CategoryServiceImpl implements  CategoryService{
 	public List<Item> getItemsByCategoryName(String categoryName, String pincode) throws CategoryException {
 	    
 	    Category category = categoryRepo.findByCategoryName(categoryName);
-	    if(category == null) throw new CategoryException("No category found as: " + categoryName);
+	    
+	    if(category == null) throw new CategoryException("Category not found as: " + categoryName);
 	    
 	    List<Item> items = category.getItems();
 	    
@@ -33,7 +34,7 @@ public class CategoryServiceImpl implements  CategoryService{
 	    	}
 	    }
 	    
-	    if(filteredItems.isEmpty()) throw new CategoryException("No items found in this category in your area");
+	    if(filteredItems.isEmpty()) throw new CategoryException("Item(s) not found in this category currently in your area");
 	    
 	    return filteredItems;
 	}

@@ -69,14 +69,14 @@ public class OrderServiceImpl implements OrderService{
 		FoodCart foodCart = customer.getFoodCart();
 
 		Map<Integer, Integer> itemsMap = foodCart.getItems();
-		if(itemsMap.isEmpty()) throw new FoodCartException("Cart is empty");
+		if(itemsMap.isEmpty()) throw new FoodCartException("Item(s) not found in your cart");
 		
 		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			
 			Item itemInCart = itemRepo.findById(entry.getKey()).get();
 			
 			if(itemInCart.getQuantity() < entry.getValue()) {
-				throw new ItemException("Insufficient item quantity to the restaurant");				
+				throw new ItemException("Insufficient item quantity in the restaurant");				
 			}
 			
 			if(restaurantService.restaurantStatus(itemInCart.getRestaurant().getRestaurantId()).equals("Closed")) {
@@ -129,13 +129,16 @@ public class OrderServiceImpl implements OrderService{
 			OrderDetails orderDetails = restaurantOrder.getValue();
 			
 			Bill bill =  billService.genrateBill(orderDetails);
+			
 			orderDetails.setBill(bill);
 			
 			orderDetails = orderDetailsRepo.save(orderDetails);
+			
 			orderDetailsList.add(orderDetails);
 		}
 		
 		foodCart.setItems(new HashMap<Integer, Integer>());
+		
 		foodCartRepo.save(foodCart);
 		
 		return orderDetailsList;
@@ -146,12 +149,12 @@ public class OrderServiceImpl implements OrderService{
 	public String cancelOrder(String key, Integer orderId) throws OrderDetailsException, LoginException, CustomerException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to cancel your order");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		OrderDetails orderDetails = orderDetailsRepo.findById(orderId).orElseThrow(()-> new OrderDetailsException("Please pass valid order Id"));
 		
-		if(orderDetails.getCustomerId() != customer.getCustomerID()) throw new CustomerException("Please pass valid order Id");
+		if(orderDetails.getCustomerId() != customer.getCustomerID()) throw new CustomerException("Invalid order Id: "+ orderId);
 		
 		LocalDateTime deliverTime = orderDetails.getOrderDate().plusMinutes(20);
 		
@@ -184,12 +187,12 @@ public class OrderServiceImpl implements OrderService{
 	public OrderDetails viewOrderByIdByCustomer(String key, Integer orderId) throws OrderDetailsException, CustomerException, LoginException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view your order");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
-		OrderDetails orderDetails = orderDetailsRepo.findById(orderId).orElseThrow(()-> new OrderDetailsException("Please pass valid order Id"));
+		OrderDetails orderDetails = orderDetailsRepo.findById(orderId).orElseThrow(()-> new OrderDetailsException("Invalid order Id: "+ orderId));
 		
-		if(orderDetails.getCustomerId() != customer.getCustomerID()) throw new OrderDetailsException("Please pass valid order Id");
+		if(orderDetails.getCustomerId() != customer.getCustomerID()) throw new OrderDetailsException("Invalid order Id: "+ orderId);
 		
 		return orderDetails;
 		
@@ -201,16 +204,16 @@ public class OrderServiceImpl implements OrderService{
 	public OrderDetails viewOrderByIdByRestaurant(String key, Integer orderId) throws OrderDetailsException, RestaurantException, LoginException{
 
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to view your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view order details");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
-		OrderDetails orderDetails=orderDetailsRepo.findById(orderId).orElseThrow(() -> new OrderDetailsException("Order not found"));
+		OrderDetails orderDetails=orderDetailsRepo.findById(orderId).orElseThrow(() -> new OrderDetailsException("Invalid order Id: "+ orderId));
 		
 		if(orderDetails.getRestaurantId().equals(restaurant.getRestaurantId())) {
 			return orderDetails;
 		}
 		
-		throw new OrderDetailsException("Please enter valid order id");
+		throw new OrderDetailsException("Invalid order Id: "+ orderId);
 		
 	}
 	
@@ -218,7 +221,7 @@ public class OrderServiceImpl implements OrderService{
 	public List<OrderDetails> viewAllOrdersByRestaurant(String key) throws OrderDetailsException, LoginException , RestaurantException{
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view order(s) details");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
 		List<OrderDetails> orders =  orderDetailsRepo.findByRestaurantId(restaurant.getRestaurantId());
@@ -226,19 +229,18 @@ public class OrderServiceImpl implements OrderService{
 		if(orders.isEmpty()) throw new OrderDetailsException("Orders not found");
 		
 		return orders;
-		
 	}
 
 	@Override
 	public List<OrderDetails> viewAllOrdersByCustomer(String key) throws OrderDetailsException, CustomerException, LoginException {
 
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view your order(s) details");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		List<OrderDetails> orders = orderDetailsRepo.findByCustomerId(customer.getCustomerID());
 		
-		if(orders.isEmpty()) throw new OrderDetailsException("You have not placed any orders");
+		if(orders.isEmpty()) throw new OrderDetailsException("Order(s) not found");
 		
 		return orders;
 		
@@ -248,7 +250,7 @@ public class OrderServiceImpl implements OrderService{
 	public List<OrderDetails> viewAllOrdersByRestaurantByCustomerId(String key, Integer customerId) throws OrderDetailsException, LoginException , RestaurantException, CustomerException{
 
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view order(s) details");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
 		List<OrderDetails> orders= orderDetailsRepo.findByRestaurantIdAndCustomerId(restaurant.getRestaurantId(), customerId);

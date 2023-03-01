@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +16,9 @@ import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
 import com.masai.model.Address;
 import com.masai.model.Customer;
+import com.masai.model.ResetPasswordDTO;
 import com.masai.service.CustomerService;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -56,9 +58,9 @@ public class CustomerController {
 		return customerResponseEntity;
 	}
 	
-	@PutMapping("/customers/update_password/{logginKey}/{currentPassword}/{newPassword}")
-	public ResponseEntity<String> updateCustomerPassword(@PathVariable("logginKey") String key,@PathVariable("currentPassword") String currentPassword,@PathVariable("newPassword") String newPassword) throws CustomerException, LoginException {
-		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updatepassword(key,currentPassword,newPassword), HttpStatus.ACCEPTED);
+	@PutMapping("/customers/update_password/{logginKey}")
+	public ResponseEntity<String> updateCustomerPassword(@PathVariable("logginKey") String key, @Valid @RequestBody ResetPasswordDTO resetPasswordDTO) throws CustomerException, LoginException {
+		ResponseEntity<String> customerResponseEntity = new ResponseEntity<>(customerService.updatepassword(key, resetPasswordDTO), HttpStatus.ACCEPTED);
 		return customerResponseEntity;
 	}
 }

@@ -53,7 +53,7 @@ public class ItemServiceImpl implements ItemService{
 		
 		List<Item> items= restaurant.getItems();
 		for(Item i: items) {
-			if(i.getItemName().equals(item.getItemName())) {
+			if(i.getItemName().equalsIgnoreCase(item.getItemName())) {
 				throw new ItemException("Item already exist");
 			}
 		}
@@ -89,7 +89,7 @@ public class ItemServiceImpl implements ItemService{
 	public Item updateItem(String key,Item item) throws ItemException, LoginException, RestaurantException {
 		
 		CurrentUserSession currentUserSession= sessionRepo.findByUuid(key); 
-		if(currentUserSession==null) throw new LoginException("Please login to add item");
+		if(currentUserSession==null) throw new LoginException("Please login to update item detail(s)");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please as Restaurant"));
 		
 		if(item.getRestaurant() != null && restaurant.getRestaurantId() != item.getRestaurant().getRestaurantId()) throw new RestaurantException("Item can not be added"); 
@@ -131,7 +131,7 @@ public class ItemServiceImpl implements ItemService{
 			}
 		}
 		
-		throw new ItemException("Item is not available in the restaurant"); 
+		throw new ItemException(itemName+ " not found in the restaurant or currently out of stock"); 
 		
 	}
 
@@ -139,7 +139,7 @@ public class ItemServiceImpl implements ItemService{
 	public String setItemNotAvailable(String key, Integer itemId) throws ItemException, RestaurantException, LoginException {
 		
 		CurrentUserSession currentUserSession= sessionRepo.findByUuid(key); 
-		if(currentUserSession==null) throw new LoginException("Please login to add item");
+		if(currentUserSession==null) throw new LoginException("Please login to update item status");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please as Restaurant"));
 		
 		Item item= itemRepo.findById(itemId).orElseThrow(() -> new ItemException("Item not found with id "+ itemId));
@@ -152,7 +152,7 @@ public class ItemServiceImpl implements ItemService{
 		
 		itemRepo.save(item);
 		
-		return item.getItemName() + " successfully set to not available";
+		return item.getItemName() + " successfully set to out of stock";
 		
 	}
 
@@ -162,14 +162,15 @@ public class ItemServiceImpl implements ItemService{
 		Restaurant restaurant =restaurantRepo.findById(restaurantId).orElseThrow(() -> new RestaurantException("Restaurant not found with id: "+ restaurantId));
 		
 		List<Item> items = restaurant.getItems();
-		if(items.isEmpty()) throw new ItemException("No items found in this restaurant");
+		
+		if(items.isEmpty()) throw new ItemException("Item(s) not found in this restaurant");
 		
 		List<Item> filteredItems= new ArrayList<>();
 		for(Item i: items) {
 			if(i.getQuantity()>0) filteredItems.add(i);
 		}
 			
-		if(filteredItems.isEmpty()) throw new ItemException("No items found in this restaurant");
+		if(filteredItems.isEmpty()) throw new ItemException("Item(s) not found in this restaurant");
 		return filteredItems;
 		
 	}
@@ -178,22 +179,23 @@ public class ItemServiceImpl implements ItemService{
 	public Map<String, Item> viewItemsOnMyAddress(String key, String itemName) throws ItemException, RestaurantException, LoginException, CustomerException{
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login first");
+		if(currentUserSession == null) throw new LoginException("Please login to view item(s) in your area");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
-		
-		if(customer.getAddress()==null) throw new CustomerException("Please add address first");
 		
 		String pincode= customer.getAddress().getPincode();
 		
 		List<Restaurant> restaurants = restaurantRepo.findAll();
-		if(restaurants.isEmpty()) throw new RestaurantException("No Restaurants found");
+		
+		if(restaurants.isEmpty()) throw new RestaurantException("Restaurant(s) not found");
 		
 		List<Restaurant> filteredRestaurants= new ArrayList<>();
 		
 		for(Restaurant r: restaurants) {
+			
 			if(r.getAddress().getPincode().equals(pincode)) filteredRestaurants.add(r);
+			
 		}
-		if(filteredRestaurants.isEmpty()) throw new RestaurantException("No Restaurants found in your area");
+		if(filteredRestaurants.isEmpty()) throw new RestaurantException("Restaurant(s) not found in your area");
 		
 		List<Item> items= new ArrayList<>();
 		
@@ -207,7 +209,7 @@ public class ItemServiceImpl implements ItemService{
 			
 		}
 		
-		if(items.isEmpty()) throw new ItemException("No Restaurants Found in your area with " + itemName);
+		if(items.isEmpty()) throw new ItemException("Restaurant(s) not Found in your area with " + itemName);
 		
 		Map<String, Item> itemsMap = new HashMap<>();
 		for(Item i: items) itemsMap.put(i.getRestaurant().getManagerName(), i);

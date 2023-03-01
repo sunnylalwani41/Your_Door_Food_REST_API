@@ -11,6 +11,7 @@ import com.masai.exception.LoginException;
 import com.masai.model.Address;
 import com.masai.model.CurrentUserSession;
 import com.masai.model.Customer;
+import com.masai.model.ResetPasswordDTO;
 import com.masai.model.ToBeDeletedCustomerAccount;
 import com.masai.repository.CustomerRepo;
 import com.masai.repository.DeletedCustomerAccountRepo;
@@ -40,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService{
 		}
 		
 		Customer customerExist = customerRepo.findByMobileNumber(customer.getMobileNumber());
-		if(customerExist != null) throw new CustomerException("Customer already registered");
+		if(customerExist != null) throw new CustomerException("Customer already registered with this mobile number");
 		
 		return customerRepo.save(customer);
 	}
@@ -73,7 +74,7 @@ public class CustomerServiceImpl implements CustomerService{
 	public String removeCustomer(String key, String password) throws CustomerException, LoginException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		if(currentUserSession == null) throw new LoginException("Please login to remove your account");
 		Customer existingCustomer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		if (!existingCustomer.getPassword().equals(password)) throw new CustomerException("Enter valid password");
@@ -91,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService{
 	public Customer viewCustomer(String key) throws CustomerException, LoginException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		if(currentUserSession == null) throw new LoginException("Please login to view your details");
 		Customer existingCustomer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		return existingCustomer;
@@ -102,7 +103,7 @@ public class CustomerServiceImpl implements CustomerService{
 	public String updateAddress(String key, Address address) throws CustomerException, LoginException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		if(currentUserSession == null) throw new LoginException("Please login to update your address");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 
 		customer.setAddress(address);
@@ -112,18 +113,22 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public String updatepassword(String key, String currentPassword, String newPassword) throws CustomerException, LoginException {
+	public String updatepassword(String key, ResetPasswordDTO resetPasswordDTO) throws CustomerException, LoginException {
+		
+		String currentPassword= resetPasswordDTO.getCurrentPassword();
+		
+		String newPassword= resetPasswordDTO.getNewPassword();
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to update your details");
+		if(currentUserSession == null) throw new LoginException("Please login to update your password");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		if(!customer.getPassword().equals(currentPassword)) throw new CustomerException("Enter vaild current password");
 		
 		customer.setPassword(newPassword);
-		System.out.println("------------------");
+		
 		customerRepo.save(customer);
-		System.out.println("=====================");
+		
 		return "Password updated sucssesfully";
 	}
 

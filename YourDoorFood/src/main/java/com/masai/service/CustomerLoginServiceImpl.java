@@ -35,20 +35,20 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 	@Override
 	public CurrentUserSession login(LoginDTO dto) throws LoginException, CustomerException {
 		
+		Customer customer = customerRepo.findByMobileNumber(dto.getMobileNumber());
+		
+		if(customer == null) throw new CustomerException("Please enter a valid mobile number");
+		
+		Optional<CurrentUserSession> currentUserSession = sessionRepo.findById(customer.getCustomerID());
+		
+		if(currentUserSession.isPresent()) throw new LoginException("User already logged in with this mobile number");
+		
 		List<CurrentUserSession> list = sessionRepo.findAll();
 		for(CurrentUserSession c : list) {
 			sessionRepo.delete(c);
 		}
 		
-		Customer customer = customerRepo.findByMobileNumber(dto.getMobileNumber());
-		
-		if(customer == null) throw new CustomerException("Please enter a valid mobile number!");
-		
-		Optional<CurrentUserSession> currentUserSession = sessionRepo.findById(customer.getCustomerID());
-		
-		if(currentUserSession.isPresent()) throw new LoginException("User already logged in with this mobile number!");
-		
-		if(!customer.getPassword().equals(dto.getPassword())) throw new LoginException("Incorrect password!");
+		if(!customer.getPassword().equals(dto.getPassword())) throw new LoginException("Incorrect password");
 
 		String key = RandomString.make(6);
 
@@ -67,11 +67,11 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		
-		if(currentUserSession == null) throw new LoginException("Invalid User key!");
+		if(currentUserSession == null) throw new LoginException("Invalid User key");
 		
 		sessionRepo.delete(currentUserSession);
 		
-		return "Logged out successfully...";
+		return "Logged out successfully";
 	}
 
 }

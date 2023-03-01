@@ -58,7 +58,7 @@ public class BillServiceImpl implements BillService{
 	public Bill viewBill(String key, Integer billId) throws BillException, CustomerException, LoginException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view your bill");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		Bill bill = billRepo.findById(billId).orElseThrow(() -> new BillException("Bill not found"));
@@ -74,12 +74,12 @@ public class BillServiceImpl implements BillService{
 		LocalDate endDate= dateDTO.getEndDate();
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view bill(s)");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		List<OrderDetails> orderDetails = orderDetailsRepo.findByCustomerId(customer.getCustomerID());
 		
-		if(orderDetails.isEmpty()) throw new BillException("No bills found");
+		if(orderDetails.isEmpty()) throw new BillException("Bill(s) not found");
 		
 		List<OrderDetails> filteredOrders = new ArrayList<>();
 		for(OrderDetails o : orderDetails) {
@@ -89,7 +89,7 @@ public class BillServiceImpl implements BillService{
 				filteredOrders.add(o);
 			}
 		}
-		if(filteredOrders.isEmpty()) throw new BillException("No bills found within these dates");
+		if(filteredOrders.isEmpty()) throw new BillException("Bill(s) not found within these dates");
 		
 		List<Bill> bills = new ArrayList<>();
 		for(OrderDetails o : filteredOrders) {
@@ -103,11 +103,11 @@ public class BillServiceImpl implements BillService{
 	public List<Bill> viewBills(String key) throws BillException, LoginException, CustomerException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view bill(s)");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		List<OrderDetails> orderDetails = orderDetailsRepo.findByCustomerId(customer.getCustomerID());
-		if(orderDetails.isEmpty()) throw new BillException("No bills found");
+		if(orderDetails.isEmpty()) throw new BillException("Bill(s) not found");
 		
 		List<Bill> bills = new ArrayList<>();
 		for(OrderDetails o : orderDetails) {
@@ -121,7 +121,7 @@ public class BillServiceImpl implements BillService{
 	public Double getTotalCost(String key, Integer billId) throws BillException, CustomerException, LoginException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
-		if(currentUserSession == null) throw new LoginException("Please login to place your order");
+		if(currentUserSession == null) throw new LoginException("Please login to view total cost of your order");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
 		Bill bill = billRepo.findById(billId).orElseThrow(() -> new BillException("Bill not found"));

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.masai.exception.CustomerException;
 import com.masai.exception.LoginException;
 import com.masai.exception.RestaurantException;
+import com.masai.model.ResetPasswordDTO;
 import com.masai.model.Restaurant;
 import com.masai.model.Suggestion;
 import com.masai.service.RestaurantService;
@@ -74,5 +75,11 @@ public class RestaurantController {
 	public ResponseEntity<List<Suggestion>> viewSuggestions(@PathVariable("loginkey") String loginkey) throws LoginException, RestaurantException{
 		return new ResponseEntity<>(resService.viewSuggestions(loginkey),HttpStatus.FOUND);
 		
+	}
+	
+	@PutMapping("/restaurants/update_password/{logginKey}")
+	public ResponseEntity<String> updateRestaurantPassword(@PathVariable("logginKey") String key, @Valid @RequestBody ResetPasswordDTO resetPasswordDTO) throws LoginException, RestaurantException {
+		ResponseEntity<String> restaurantResponseEntity = new ResponseEntity<>(resService.updatepassword(key, resetPasswordDTO), HttpStatus.ACCEPTED);
+		return restaurantResponseEntity;
 	}
 }
