@@ -87,8 +87,4 @@ public class Restaurant {
 		@ElementCollection
 		private List<Suggestion> suggestions;
 		
-		@JsonIgnore
-		@OneToMany(cascade = CascadeType.ALL)
-		List<RestaurantOrders> restaurantOrders = new ArrayList<>();
-		
 }

@@ -28,17 +28,17 @@ public class OrderController {
 	private OrderService orderService;
 	
 	@GetMapping("/orders/customer/COD/place_order/{loginKey}")
-	public ResponseEntity<OrderDetails> placeOrderHandlerByCOD(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
+	public ResponseEntity<List<OrderDetails>> placeOrderHandlerByCOD(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
 		
-		OrderDetails order= orderService.placeOrder(key, "CASH_ON_DELIVERY");
-		return new ResponseEntity<OrderDetails>(order, HttpStatus.ACCEPTED);
+		List<OrderDetails> orders = orderService.placeOrder(key, "CASH_ON_DELIVERY");
+		return new ResponseEntity<>(orders, HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/orders/customer/prepaid/place_order/{loginKey}")
-	public ResponseEntity<OrderDetails> placeOrderHandlerByPrepaid(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
+	public ResponseEntity<List<OrderDetails>> placeOrderHandlerByPrepaid(@PathVariable("loginKey") String key) throws OrderDetailsException, LoginException, CustomerException, FoodCartException, ItemException, BillException, RestaurantException{
 		
-		OrderDetails order= orderService.placeOrder(key, "PAYMENT_SUCCESS");
-		return new ResponseEntity<OrderDetails>(order, HttpStatus.ACCEPTED);
+		List<OrderDetails> orders = orderService.placeOrder(key, "PAYMENT_SUCCESS");
+		return new ResponseEntity<>(orders, HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/orders/customer/cancel_order/{loginKey}/{orderId}")

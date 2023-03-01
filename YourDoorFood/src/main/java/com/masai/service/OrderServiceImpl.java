@@ -88,11 +88,8 @@ public class OrderServiceImpl implements OrderService{
 			}
 		}
 		
-		List<ItemQuantityDTO> itemsDto = new ArrayList<>();
-		
 		Map<Integer, OrderDetails> restaurantOrderMap = new HashMap<>();
 		
-		Double sum = 0.0;
 		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			
 			Item item = itemRepo.findById(entry.getKey()).get();
@@ -138,6 +135,9 @@ public class OrderServiceImpl implements OrderService{
 			orderDetailsList.add(orderDetails);
 		}
 		
+		foodCart.setItems(new HashMap<Integer, Integer>());
+		foodCartRepo.save(foodCart);
+		
 		return orderDetailsList;
 		
 	}
@@ -161,11 +161,13 @@ public class OrderServiceImpl implements OrderService{
 		
 		List<ItemQuantityDTO> itemsDto = orderDetails.getItems();
 
-//		System.out.println(orderDetails.getOrderId());
-//		System.out.println(itemsDto);
-		orderDetailsRepo.delete(orderDetails);
+		String result = "Order cancelled successfully";
 		
-//		System.out.println(itemsDto);
+		if(orderDetails.getPaymentStatus().toString().equals("PAYMENT_SUCCESS")) {
+			result += " and your payment transferred back to your account.";
+		}
+		
+		orderDetailsRepo.delete(orderDetails);
 		
 		for(ItemQuantityDTO i : itemsDto) {
 			
@@ -174,7 +176,7 @@ public class OrderServiceImpl implements OrderService{
 			itemRepo.save(item);
 		}
 		
-		return "Order cancelled successfully";
+		return result;
 		
 	}
 

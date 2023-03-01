@@ -36,7 +36,7 @@ public class DeliveryServiceImpl implements DeliveryService{
 		
 		OrderDetails orderDetails = orderDetailsOpt.get();
 		
-		if(currentUserSession.getId() != orderDetails.getCustomer().getCustomerID()) throw new OrderDetailsException("No order found with this order id: "+orderId);
+		if(currentUserSession.getId() != orderDetails.getCustomerId()) throw new OrderDetailsException("No order found with this order id: "+orderId);
 		
 		LocalDateTime deliverTime = orderDetails.getOrderDate().plusMinutes(20);
 		

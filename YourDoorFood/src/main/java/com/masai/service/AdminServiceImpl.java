@@ -27,7 +27,7 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public String deleteAccounts(LoginDTO loginDTO) throws LoginException {
 		
-		if(!loginDTO.getMobileNumber().equals("9999988888") || !loginDTO.getPassword().equals("99888899")) {
+		if(!loginDTO.getMobileNumber().equals("9999988888") || !loginDTO.getPassword().equals("9999888888")) {
 			throw new LoginException("Invalid login details");
 		}
 		
@@ -36,9 +36,10 @@ public class AdminServiceImpl implements AdminService{
 		List<ToBeDeletedCustomerAccount> deletedCustomerAccounts = deletedCustomerAccountRepo.findAll();
 		
 		for(ToBeDeletedCustomerAccount e : deletedCustomerAccounts) {
-			if(LocalDateTime.now().isAfter(e.getDeletionSheduledAt().plusHours(24))) {
+			if(LocalDateTime.now().isAfter(e.getDeletionSheduledAt().plusMinutes(2))) {
 				Customer customer = customerRepo.findById(e.getCustomerId()).get();
 				customerRepo.delete(customer);
+				deletedCustomerAccountRepo.delete(e);
 				noOfAccountsDeleted++;
 			}
 		}
@@ -49,16 +50,19 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public List<Customer> showToBeDeletedAccounts(LoginDTO loginDTO) throws CustomerException, LoginException {
 		
-		if(!loginDTO.getMobileNumber().equals("9999988888") || !loginDTO.getPassword().equals("99888899")) {
+		if(!loginDTO.getMobileNumber().equals("9999988888") || !loginDTO.getPassword().equals("9999888888")) {
 			throw new LoginException("Invalid login details");
 		}
-		
+
 		List<Customer> customers = new ArrayList<>();
-		
+
 		List<ToBeDeletedCustomerAccount> deletedCustomerAccounts = deletedCustomerAccountRepo.findAll();
+		
 		for(ToBeDeletedCustomerAccount e : deletedCustomerAccounts) {
-			if(e.getDeletionSheduledAt().isAfter(e.getDeletionSheduledAt().plusHours(24))) {
+			if(LocalDateTime.now().isAfter(e.getDeletionSheduledAt().plusMinutes(2))) {
+
 				Customer customer = customerRepo.findById(e.getCustomerId()).get();
+				System.out.println(customer.getFirstName());
 				customers.add(customer);
 			}
 		}

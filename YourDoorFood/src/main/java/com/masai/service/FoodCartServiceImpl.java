@@ -118,10 +118,6 @@ public class FoodCartServiceImpl implements FoodCartService{
 		if(item.getQuantity() >= (quantity + itemsMap.get(itemId)))  itemsMap.put(itemId, itemsMap.get(itemId) + quantity);
 		else throw new ItemException("Insufficient item quantity");
 		
-//		foodCart.setItems(itemsMap);
-//		foodCart.setCustomer(customer);
-//		customer.setFoodCart(foodCart);
-		
 		return cartRepo.save(foodCart);
 	}
 
@@ -223,7 +219,7 @@ public class FoodCartServiceImpl implements FoodCartService{
 		
 		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			Item item = itemRepo.findById(entry.getKey()).get();
-			ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost(), item.getRestaurant().getRestaurantName(), item.getRestaurant().getRestaurantId());
+			ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost());
 			items.add(dto);
 		}
 		
