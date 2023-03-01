@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -152,7 +151,7 @@ public class OrderServiceImpl implements OrderService{
 		
 		OrderDetails orderDetails = orderDetailsRepo.findById(orderId).orElseThrow(()-> new OrderDetailsException("Please pass valid order Id"));
 		
-		if(orderDetails.getCustomer().getCustomerID() != customer.getCustomerID()) throw new CustomerException("Please pass valid order Id");
+		if(orderDetails.getCustomerId() != customer.getCustomerID()) throw new CustomerException("Please pass valid order Id");
 		
 		LocalDateTime deliverTime = orderDetails.getOrderDate().plusMinutes(20);
 		
@@ -162,11 +161,11 @@ public class OrderServiceImpl implements OrderService{
 		
 		List<ItemQuantityDTO> itemsDto = orderDetails.getItems();
 
-		System.out.println(orderDetails.getOrderId());
-		System.out.println(itemsDto);
+//		System.out.println(orderDetails.getOrderId());
+//		System.out.println(itemsDto);
 		orderDetailsRepo.delete(orderDetails);
 		
-		System.out.println(itemsDto);
+//		System.out.println(itemsDto);
 		
 		for(ItemQuantityDTO i : itemsDto) {
 			
@@ -188,11 +187,13 @@ public class OrderServiceImpl implements OrderService{
 		
 		OrderDetails orderDetails = orderDetailsRepo.findById(orderId).orElseThrow(()-> new OrderDetailsException("Please pass valid order Id"));
 		
-		if(orderDetails.getCustomer().getCustomerID() != customer.getCustomerID()) throw new OrderDetailsException("Please pass valid order Id");
+		if(orderDetails.getCustomerId() != customer.getCustomerID()) throw new OrderDetailsException("Please pass valid order Id");
 		
 		return orderDetails;
 		
 	}
+	
+	
 	
 	@Override
 	public OrderDetails viewOrderByIdByRestaurant(String key, Integer orderId) throws OrderDetailsException, RestaurantException, LoginException{
@@ -201,41 +202,12 @@ public class OrderServiceImpl implements OrderService{
 		if(currentUserSession == null) throw new LoginException("Please login to view your order");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
-		Set<Integer> customersIds = restaurant.getCustomers();
+		OrderDetails orderDetails=orderDetailsRepo.findById(orderId).orElseThrow(() -> new OrderDetailsException("Order not found"));
 		
-		List<Customer> customers = new ArrayList<>();
-		for(Integer i : customersIds) {
-			customers.add(customerRepo.findById(i).get());
+		if(orderDetails.getRestaurantId().equals(restaurant.getRestaurantId())) {
+			return orderDetails;
 		}
 		
-		for(Customer c : customers) {
-			List<OrderDetails> temp = c.getOrders();
-			
-			for(OrderDetails o : temp) {
-
-				if(o.getOrderId().equals(orderId)) {
-					Double sum = 0.0;
-
-					List<ItemQuantityDTO> itemsDto = o.getItems();
-					
-					List<ItemQuantityDTO> restaurantOrderDetails = new ArrayList<>();
-					
-					for(ItemQuantityDTO dto: itemsDto) {
-						if(dto.getRestaurantId() == restaurant.getRestaurantId()) {
-							restaurantOrderDetails.add(dto);
-							sum += dto.getCost() * dto.getOrderedQuantity();
-						}
-					}
-
-					if(restaurantOrderDetails.isEmpty()) throw new OrderDetailsException("Please enter valid order id");
-					o.setTotalAmount(sum);
-					o.setItems(restaurantOrderDetails);
-					return o;
-				}
-				
-			}
-		}
-
 		throw new OrderDetailsException("Please enter valid order id");
 		
 	}
@@ -247,39 +219,9 @@ public class OrderServiceImpl implements OrderService{
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
-		Set<Integer> customersIds = restaurant.getCustomers();
+		List<OrderDetails> orders =  orderDetailsRepo.findByRestaurantId(restaurant.getRestaurantId());
 		
-		List<Customer> customers = new ArrayList<>();
-		for(Integer i : customersIds) {
-			customers.add(customerRepo.findById(i).get());
-		}
-		
-		List<OrderDetails> orders = new ArrayList<>();
-		System.out.println(customers.size());
-		for(Customer c: customers) {
-			List<OrderDetails> temp = c.getOrders();
-			
-			for(OrderDetails o: temp) {
-				
-				Double sum = 0.0;
-				
-				List<ItemQuantityDTO> itemsDto = o.getItems();
-				
-				List<ItemQuantityDTO> restaurantOrderDetails = new ArrayList<>();
-				
-				for(ItemQuantityDTO dto: itemsDto) {
-					if(dto.getRestaurantId() == restaurant.getRestaurantId()) {
-						restaurantOrderDetails.add(dto);
-						sum += dto.getCost() * dto.getOrderedQuantity();
-					}
-				}
-				o.setTotalAmount(sum);
-				o.setItems(restaurantOrderDetails);
-				orders.add(o);
-			}
-		}
-		
-		if(orders.isEmpty()) throw new OrderDetailsException("Orders Not Found");
+		if(orders.isEmpty()) throw new OrderDetailsException("Orders not found");
 		
 		return orders;
 		
@@ -292,7 +234,7 @@ public class OrderServiceImpl implements OrderService{
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Customer customer = customerRepo.findById(currentUserSession.getId()).orElseThrow(()-> new CustomerException("Please login as Customer"));
 		
-		List<OrderDetails> orders = customer.getOrders();
+		List<OrderDetails> orders = orderDetailsRepo.findByCustomerId(customer.getCustomerID());
 		
 		if(orders.isEmpty()) throw new OrderDetailsException("You have not placed any orders");
 		
@@ -307,46 +249,9 @@ public class OrderServiceImpl implements OrderService{
 		if(currentUserSession == null) throw new LoginException("Please login to place your order");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please login as Restaurant"));
 		
-		Set<Integer> customersIds = restaurant.getCustomers();
+		List<OrderDetails> orders= orderDetailsRepo.findByRestaurantIdAndCustomerId(restaurant.getRestaurantId(), customerId);
 		
-		List<Customer> customers = new ArrayList<>();
-		for(Integer i : customersIds) {
-			customers.add(customerRepo.findById(i).get());
-		}
-
-		Customer customer= null;
-		for(Customer c: customers) {
-			if(c.getCustomerID()==customerId) {
-				customer = c;
-			}
-		}
-		if(customer == null) throw new CustomerException("No orders found for this customers");
-		
-		List<OrderDetails> orders = new ArrayList<>();
-		
-		List<OrderDetails> temp = customer.getOrders();
-		
-		for(OrderDetails o: temp) {
-			
-			Double sum = 0.0;
-			
-			List<ItemQuantityDTO> itemsDto = o.getItems();
-			
-			List<ItemQuantityDTO> restaurantOrderDetails = new ArrayList<>();
-			
-			for(ItemQuantityDTO dto: itemsDto) {
-				if(dto.getRestaurantId() == restaurant.getRestaurantId()) {
-					restaurantOrderDetails.add(dto);
-					sum += dto.getCost() * dto.getOrderedQuantity();
-				}
-			}
-			o.setTotalAmount(sum);
-			o.setItems(restaurantOrderDetails);
-			orders.add(o);
-			
-		}
-		
-		if(orders.isEmpty()) throw new OrderDetailsException("Orders Not Found");
+		if(orders.isEmpty()) throw new OrderDetailsException("Orders not found");
 		
 		return orders;
 		
