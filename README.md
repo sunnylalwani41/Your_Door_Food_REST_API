@@ -1,7 +1,8 @@
 # Your Door Food
 
 <p align="center">
-    <img src="Detail/Your Door Food.JPG">
+    <img src="YourDoorFood/Detail/Your Door Food.jpg" />
+<!--     <img src="https://user-images.githubusercontent.com/107456964/220406389-20f8b8d8-ac28-4c2a-b5ed-95f6e1d9afa0.jpg"> -->
 </p>  
 
 # Your Door Food
@@ -96,4 +97,10 @@ Administrator can **View request Delete Account List** and **Delete the Account 
     - Delete Account as per Request
 
 # FLOW CHART
-![FlowChartYourDoorFood](https://user-images.githubusercontent.com/107456964/220468355-2e96143c-3811-433b-ae7a-a7f97d00fa53.jpg)
+
+<img src="YourDoorFood/Detail/Flow_Chart.jpg" />
+<!-- ![FlowChartYourDoorFood](https://user-images.githubusercontent.com/107456964/220468355-2e96143c-3811-433b-ae7a-a7f97d00fa53.jpg) -->
+
+# Entity Relationship Diagram
+
+<img src="YourDoorFood/Detail/Your Door Food Entity Relationship Diagram.jpg" />
