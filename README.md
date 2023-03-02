@@ -1,7 +1,7 @@
 # Your Door Food
 
 <p align="center">
-    <img width="200" src="https://user-images.githubusercontent.com/107456964/220406389-20f8b8d8-ac28-4c2a-b5ed-95f6e1d9afa0.jpg" alt="Material Bread logo">
+    <img src="https://user-images.githubusercontent.com/107456964/220406389-20f8b8d8-ac28-4c2a-b5ed-95f6e1d9afa0.jpg" alt="Your Door Food">
 </p>  
 
 # Your Door Food
