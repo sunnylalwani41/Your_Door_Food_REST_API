@@ -90,7 +90,7 @@ Administrator can **View request Delete Account List** and **Delete the Account 
 
 - Administrator
     -
-    - Login & Logout
+    - Login
     - View Deleted Account Request
     - Delete Account as per Request
 
