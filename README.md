@@ -10,7 +10,7 @@
 
 The **Your Door Food** is a REST API, which allows **Customers** to browse the food, **Save** them to **Cart** for future, perform all the basic fundamental **CRUD** operations like any other **Online Food Ordering and Delivery Application** and place orders as per their requirements. It is also allow **Restaurant** can **Add the food**, can manage **Cost** and **Quantity**.
 
-The **Your Door Food** API also provides **User- Admin Validation & Authentication** for every operation and simplified Exception Handling for layman's easy understanding. 
+The **Your Door Food** API also provides **User, Admin Validation & Authentication** for every operation and simplified Exception Handling for layman's easy understanding. 
 
 The API's primary objective is to provide to the Customer  **a Simple & User-Friendly online food ordering Experience.**
 
