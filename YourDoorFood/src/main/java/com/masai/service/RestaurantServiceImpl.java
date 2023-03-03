@@ -68,7 +68,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		
 		for(Restaurant r : restaurants) {
 			if(r.equals(restaurant)) continue;
-			if(r.getAddress().getPincode().equals(updatedRestaurant.getAddress().getPincode()) && r.getRestaurantName().equals(updatedRestaurant.getRestaurantName())) {
+			if(r.getAddress().getPincode().equals(updatedRestaurant.getAddress().getPincode()) && r.getRestaurantName().equalsIgnoreCase(updatedRestaurant.getRestaurantName())) {
 				throw new RestaurantException("Can't change restaurant name, restaurant with this name is already present in your area");
 			}
 		}
@@ -81,9 +81,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 			restaurant.setOpenTime(updatedRestaurant.getOpenTime());
 		if(updatedRestaurant.getCloseTime() != null)
 			restaurant.setCloseTime(updatedRestaurant.getCloseTime());
-		
+		if(updatedRestaurant.getEmail() != null)
+			restaurant.setEmail(updatedRestaurant.getEmail());
+		restaurant.setMobileNumber(updatedRestaurant.getMobileNumber());
+		restaurant.setAddress(updatedRestaurant.getAddress());
 		return restaurantRepo.save(restaurant);
-		
 	}
 
 	@Override

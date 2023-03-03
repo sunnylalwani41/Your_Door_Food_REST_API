@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -27,6 +29,7 @@ import lombok.NoArgsConstructor;
 public class Category {
 
 	@Id
+	@JsonProperty(access = Access.READ_ONLY)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "categoryGenrator")
 	@SequenceGenerator(name = "categoryGenrator",sequenceName = "catgen",allocationSize = 1,initialValue = 101)
 	private Integer catId;

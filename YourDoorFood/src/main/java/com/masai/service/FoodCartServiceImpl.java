@@ -103,7 +103,7 @@ public class FoodCartServiceImpl implements FoodCartService{
 		
 		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			Item itemInCart = itemRepo.findById(entry.getKey()).get();
-			if(itemInCart.getItemName().equals(itemName)) {
+			if(itemInCart.getItemName().equalsIgnoreCase(itemName)) {
 				item = itemInCart;
 				break;
 			}
@@ -132,7 +132,7 @@ public class FoodCartServiceImpl implements FoodCartService{
 		Item item = null;
 		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			Item itemInCart = itemRepo.findById(entry.getKey()).get();
-			if(itemInCart.getItemName().equals(itemName)) {
+			if(itemInCart.getItemName().equalsIgnoreCase(itemName)) {
 				item = itemInCart;
 				break;
 			}
@@ -170,7 +170,7 @@ public class FoodCartServiceImpl implements FoodCartService{
 		Item item = null;
 		for(Map.Entry<Integer, Integer> entry : itemsMap.entrySet()) {
 			Item itemInCart = itemRepo.findById(entry.getKey()).get();
-			if(itemInCart.getItemName().equals(itemName)) {
+			if(itemInCart.getItemName().equalsIgnoreCase(itemName)) {
 				item = itemInCart;
 				break;
 			}

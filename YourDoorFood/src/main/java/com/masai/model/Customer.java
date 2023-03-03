@@ -33,6 +33,7 @@ import lombok.NoArgsConstructor;
 public class Customer {
 	
 	@Id
+	@JsonProperty(access = Access.READ_ONLY)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "userGenerator")
     @SequenceGenerator(name = "userGenerator",sequenceName = "usergen",allocationSize = 1,initialValue = 1)
 	private Integer customerID;
@@ -63,7 +64,7 @@ public class Customer {
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotNull(message = "Password is required")
-	@Size(min = 4,max = 8)
+	@Size(min = 4,max = 8, message = "Password size must be between 4 to 8")
 	@NotBlank(message = "Password should not be black")
 	private String password;
 	

@@ -88,7 +88,8 @@ public class ItemServiceImpl implements ItemService{
 	@Override
 	public Item updateItem(String key,Item item) throws ItemException, LoginException, RestaurantException {
 		
-		CurrentUserSession currentUserSession= sessionRepo.findByUuid(key); 
+		CurrentUserSession currentUserSession= sessionRepo.findByUuid(key);
+		System.out.println(currentUserSession+" key: "+key);
 		if(currentUserSession==null) throw new LoginException("Please login to update item detail(s)");
 		Restaurant restaurant = restaurantRepo.findById(currentUserSession.getId()).orElseThrow(()-> new RestaurantException("Please as Restaurant"));
 		
@@ -212,7 +213,7 @@ public class ItemServiceImpl implements ItemService{
 		if(items.isEmpty()) throw new ItemException("Restaurant(s) not Found in your area with " + itemName);
 		
 		Map<String, Item> itemsMap = new HashMap<>();
-		for(Item i: items) itemsMap.put(i.getRestaurant().getManagerName(), i);
+		for(Item i: items) itemsMap.put(i.getRestaurant().getRestaurantName(), i);
 		
 		return itemsMap;
 		

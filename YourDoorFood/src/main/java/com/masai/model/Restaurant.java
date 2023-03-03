@@ -40,6 +40,7 @@ import lombok.NoArgsConstructor;
 public class Restaurant {
 
 	  @Id
+	  @JsonProperty(access = Access.READ_ONLY)
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "userGenerator")
 	    @SequenceGenerator(name = "userGenerator",sequenceName = "usergen",allocationSize = 1,initialValue = 1)
 		private Integer restaurantId;

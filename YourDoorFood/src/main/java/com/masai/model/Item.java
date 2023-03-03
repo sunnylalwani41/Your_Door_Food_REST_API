@@ -1,6 +1,8 @@
 package com.masai.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,6 +28,7 @@ public class Item {
 
 	
 	 @Id
+	 @JsonProperty(access = Access.READ_ONLY)
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "itemGenrator")
 	    @SequenceGenerator(name = "itemGenrator",sequenceName = "itemgen",allocationSize = 1,initialValue = 11)
 		private Integer itemId;

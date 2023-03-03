@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,7 @@ public class ItemController {
 		return new ResponseEntity<>(items, HttpStatus.FOUND);
 	}
 	
-	@PutMapping("/items/restaurant/set_not_available/{logginKey}/{itemId}")
+	@DeleteMapping("/items/restaurant/set_not_available/{logginKey}/{itemId}")
 	public ResponseEntity<String> setItemNotAvailableHandler(@PathVariable("logginKey") String logginKey, @PathVariable("itemId") Integer itemId) throws ItemException, RestaurantException, LoginException{
 		
 		String result = iItemService.setItemNotAvailable(logginKey, itemId);
@@ -73,7 +74,7 @@ public class ItemController {
 		return new ResponseEntity<>(item, HttpStatus.FOUND);
 	}
 	
-	@GetMapping("/items/customer/same_item_from_nearbyme_restaurants/{loginKey}/{itemName}")
+	@GetMapping("/items/customer/search_item_from_nearby_restaurants/{loginKey}/{itemName}")
 	public ResponseEntity<Map<String, Item>> viewItemsOnMyAddressHandler(@PathVariable("loginKey") String loginKey, @PathVariable("itemName") String itemName) throws ItemException, RestaurantException, LoginException, CustomerException
 
 	{

@@ -33,7 +33,7 @@ public class AdminController {
 		
 	}
 	
-	@PostMapping("/admin/view_customers_to_be_deleted/{loginKey}")
+	@PostMapping("/admin/view_customers_to_be_deleted")
 	public ResponseEntity<List<Customer>> showToBeDeletedAccountsHandler(@Valid @RequestBody LoginDTO loginDTO) throws CustomerException, LoginException{
 		List<Customer> customers = adminService.showToBeDeletedAccounts(loginDTO);
 		return new ResponseEntity<>(customers, HttpStatus.FOUND);

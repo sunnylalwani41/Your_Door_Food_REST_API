@@ -37,7 +37,7 @@ public class RestaurantController {
 	}
 	
 	@PutMapping("/restaurants/update_basic_details/{loginkey}")
-	public ResponseEntity<Restaurant> updateRestuarants( @PathVariable("loginkey") String  loginkey, @RequestBody Restaurant restaurant) throws RestaurantException, LoginException{
+	public ResponseEntity<Restaurant> updateRestuarants( @PathVariable("loginkey") String  loginkey, @Valid @RequestBody Restaurant restaurant) throws RestaurantException, LoginException{
 		return new ResponseEntity<>(resService.updateRestaurant(loginkey,restaurant),HttpStatus.ACCEPTED);
 		
 	}
