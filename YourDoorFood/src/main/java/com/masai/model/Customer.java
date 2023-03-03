@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -64,7 +65,7 @@ public class Customer {
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotNull(message = "Password is required")
-	@Size(min = 4,max = 8, message = "Password size must be between 4 to 8")
+	@Size(min = 8,max = 15, message = "Password size must be between 8 to 15")
 	@NotBlank(message = "Password should not be black")
 	private String password;
 	

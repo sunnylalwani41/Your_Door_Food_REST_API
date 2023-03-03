@@ -47,6 +47,7 @@ public class Restaurant {
 		private String restaurantName;
 
 		@Valid
+		@NotNull(message = "Address can not be null")
 		@Embedded
 		private Address address;
 		@Email

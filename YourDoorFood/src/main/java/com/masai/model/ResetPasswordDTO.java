@@ -12,13 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResetPasswordDTO {
-	
+	@NotNull(message = "Current password can not be null")
+	@NotBlank(message = "Current password can not be blank")
+	@NotEmpty(message = "Current password can not be empty")
+	@Size(min = 8, max = 15, message = "Current password length should be 8 to 15")
 	private String currentPassword;
 	
-	@NotNull(message = "Password can not be null")
-	@NotBlank(message = "Password can not be blank")
-	@NotEmpty(message = "Password can not be empty")
-	@Size(min = 8, max = 15, message = "Password length should be 8 to 15")
+	@NotNull(message = "New password can not be null")
+	@NotBlank(message = "New password can not be blank")
+	@NotEmpty(message = "New password can not be empty")
+	@Size(min = 8, max = 15, message = "New password length should be 8 to 15")
 	private String newPassword;
 	
 }
