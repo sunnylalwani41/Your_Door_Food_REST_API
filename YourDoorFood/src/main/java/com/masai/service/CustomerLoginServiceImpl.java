@@ -56,7 +56,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService{
 		sessionRepo.save(genrateSession);
 		
 		Optional<ToBeDeletedCustomerAccount> account = deletedCustomerAccountRepo.findById(customer.getCustomerID());
-		if(!account.isEmpty()) 
+		if(account.isPresent()) 
 			deletedCustomerAccountRepo.delete(account.get());
 		
 		return genrateSession;
