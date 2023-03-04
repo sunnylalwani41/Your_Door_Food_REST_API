@@ -96,6 +96,8 @@ public class OrderServiceImpl implements OrderService{
 			
 			Integer restaurantId = item.getRestaurant().getRestaurantId();
 			
+			
+			
 			if(restaurantOrderMap.containsKey(restaurantId)) {
 				
 				ItemQuantityDTO dto = new ItemQuantityDTO(item.getItemId(), item.getItemName(), entry.getValue(), item.getCategory().getCategoryName(), item.getCost());
@@ -120,6 +122,9 @@ public class OrderServiceImpl implements OrderService{
 				
 				restaurantOrderMap.put(restaurantId, orderDetails);
 			}
+			
+			item.setQuantity(item.getQuantity()-entry.getValue());
+			itemRepo.save(item);
 		}
 		
 		List<OrderDetails> orderDetailsList = new ArrayList<>();
