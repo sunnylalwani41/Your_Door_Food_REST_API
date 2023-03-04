@@ -65,7 +65,7 @@ public class ItemServiceImpl implements ItemService{
 		Category category= null;
 		
 		for(Category c: categories) {
-			if(c.getCategoryName().contains(categoryName)) {
+			if(c.getCategoryName().equalsIgnoreCase(categoryName)) {
 				category=c;
 				break;
 			}
