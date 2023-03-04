@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.masai.exception.CustomerException;
 import com.masai.exception.DeliveryException;
 import com.masai.exception.LoginException;
 import com.masai.exception.OrderDetailsException;
@@ -21,7 +22,7 @@ public class DeliveryController {
 	private DeliveryService deliveryService;
 	
 	@GetMapping("/delivery/customer/{key}/{orderId}")
-	public ResponseEntity<String> orderDeliveryHandler(@PathVariable("key") String key, @PathVariable("orderId") Integer orderId) throws DeliveryException, LoginException, OrderDetailsException{
+	public ResponseEntity<String> orderDeliveryHandler(@PathVariable("key") String key, @PathVariable("orderId") Integer orderId) throws DeliveryException, LoginException, OrderDetailsException, CustomerException{
 		
 		String result = deliveryService.getOrderDetails(key, orderId);
 		

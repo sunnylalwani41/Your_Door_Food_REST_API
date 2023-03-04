@@ -85,7 +85,7 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		customerLoginService.logout(key);
 		
-		return "Your account will be deleted after 24 hours, you can login again within 24 hours to avoid it";
+		return "Logged out successfully, your account will be deleted after 24 hours, you can login again within 24 hours to avoid it";
 		
 	}
 

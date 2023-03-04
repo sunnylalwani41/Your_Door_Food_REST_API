@@ -6,11 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.masai.exception.CustomerException;
 import com.masai.exception.DeliveryException;
 import com.masai.exception.LoginException;
 import com.masai.exception.OrderDetailsException;
 import com.masai.model.CurrentUserSession;
+import com.masai.model.Customer;
 import com.masai.model.OrderDetails;
+import com.masai.repository.CustomerRepo;
 import com.masai.repository.OrderDetailsRepo;
 import com.masai.repository.SessionRepo;
 
@@ -23,12 +26,19 @@ public class DeliveryServiceImpl implements DeliveryService{
 	@Autowired
 	private SessionRepo sessionRepo;
 	
+	@Autowired
+	private CustomerRepo customerRepo;
+	
 	@Override
-	public String getOrderDetails(String key, Integer orderId) throws DeliveryException, LoginException, OrderDetailsException {
+	public String getOrderDetails(String key, Integer orderId) throws DeliveryException, LoginException, OrderDetailsException, CustomerException {
 		
 		CurrentUserSession currentUserSession = sessionRepo.findByUuid(key);
 		
 		if(currentUserSession==null) throw new LoginException("Please login to get your order delivery status");
+		
+		Optional<Customer> optCustomer= customerRepo.findById(currentUserSession.getId());
+		
+		if(optCustomer.isEmpty()) throw new CustomerException("Please login as Customer");
 		
 		Optional<OrderDetails> orderDetailsOpt = orderDetailsRepo.findById(orderId);
 		
