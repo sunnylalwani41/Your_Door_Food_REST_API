@@ -101,7 +101,7 @@ This project is a team project of 4 members, This is an online ordering and deli
 
 ## Installation
 
-- copy this https://github.com/sunnylalwani41/tasty-hour-5423.git
+- copy this https://github.com/sunnylalwani41/Your_Door_Food_REST_API.git
 - Select path where you want to store the project in your pc
 - open the corresponding file / folder with editor
 - open terminal of your editor
